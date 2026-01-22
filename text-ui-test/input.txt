@@ -1,0 +1,16 @@
+list
+todo read book
+todo return book
+deadline buy bread by Sunday
+event project meeting from Mon 2pm to Mon 4pm
+list
+mark
+mark 10
+mark 2
+mark 2
+unmark 2
+unmark 2
+deadline wash clothes
+event concert from Fri 7pm
+blah
+bye
