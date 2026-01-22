@@ -13,10 +13,10 @@ public class Callie {
 
         while (true) {
             String input = sc.nextLine();
+            printLine();
 
             // exit
             if (input.equals("bye")) {
-                printLine();
                 System.out.println(" Bye. Hope to see you again soon!");
                 printLine();
                 break;
@@ -24,18 +24,15 @@ public class Callie {
 
             // list
             if (input.equals("list")) {
-                printLine();
                 System.out.println(" Here are your current tasks in a list:");
                 for (int i = 0; i < counter; i++) {
                     int j = i + 1;
                     System.out.println(j + ". " + store[i].toString());
                 }
-                printLine();
             }
 
             // mark
             else if (input.startsWith("mark") || input.startsWith("unmark")) {
-                printLine();
                 // process inputs
                 String[] parts = input.split(" ");
 
@@ -43,6 +40,7 @@ public class Callie {
                 // error 1: no task specified
                 if (parts.length < 2) {
                     System.out.println(" Please specify your task.");
+                    printLine();
                     continue;
                 }
 
@@ -50,6 +48,7 @@ public class Callie {
                 int taskNumber = Integer.parseInt(parts[1]);
                 if (taskNumber < 1 || taskNumber > counter) {
                     System.out.println(" Task does not exist.");
+                    printLine();
                     continue;
                 }
                 int index = taskNumber - 1;
@@ -72,17 +71,59 @@ public class Callie {
                         System.out.println(taskNumber + ". " + task);
                     }
                 }
-                printLine();
             }
 
-            // add
+            // add some task
             else {
-                printLine();
-                System.out.println("added: " + input);
-                store[counter] = new Task(input);
+                // add a deadline
+                if (input.startsWith("deadline")) {
+                    String[] parts = input.split(" by ");
+                    if (parts.length < 2) {
+                        System.out.println(" Please specify your task with the word 'by'.");
+                        printLine();
+                        continue;
+                    }
+                    Deadline newTask = new Deadline(parts[0].substring(9), parts[1]);
+                    store[counter] = newTask;
+                    System.out.println("added: " + newTask);
+                }
+
+                //add an event
+                else if (input.startsWith("event")) {
+                    String[] parts = input.split(" from ");
+                    if (parts.length < 2) {
+                        System.out.println(" Please specify your task with the word 'from' and 'to'.");
+                        printLine();
+                        continue;
+                    }
+                    String[] dates = parts[1].split(" to ");
+                    if (dates.length < 2) {
+                        System.out.println(" Please specify your task with the word 'from' and 'to'.");
+                        printLine();
+                        continue;
+                    }
+                    Event newTask = new Event(parts[0].substring(6), dates[0], dates[1]);
+                    store[counter] = newTask;
+                    System.out.println("added: " + newTask);
+                }
+
+                // add a 'ToDo'
+                else if (input.startsWith("todo")) {
+                    String ToDoName = input.substring(5);
+                    ToDo newTask = new ToDo(ToDoName);
+                    store[counter] = newTask;
+                    System.out.println("added: " + newTask);
+                }
+
+                // reject everything else
+                else {
+                    System.out.println(" Please specify your task relevant task type.");
+                    printLine();
+                    continue;
+                }
                 counter++;
-                printLine();
             }
+            printLine();
         }
 
         // shutdown protocols

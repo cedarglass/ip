@@ -1,5 +1,5 @@
 // use OOP to clarify code
-public class Task {
+public abstract class Task {
     protected boolean isDone;
     protected String name;
 
