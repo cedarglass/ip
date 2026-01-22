@@ -1,3 +1,4 @@
+import java.util.ArrayList;
 import java.util.Scanner;
 
 /**
@@ -21,8 +22,7 @@ public class Callie {
         System.out.println("Hello, I'm Callie! It's great to see you around today.\nWhat can I do for you?\n");
         printLine();
 
-        Task[] store = new Task[100];
-        int counter = 0;
+        ArrayList<Task> store = new ArrayList<>();
 
         while (true) {
             String input = sc.nextLine();
@@ -39,9 +39,9 @@ public class Callie {
                 // list
                 if (input.equals("list")) {
                     System.out.println(" Here are your current tasks in a list:");
-                    for (int i = 0; i < counter; i++) {
+                    for (int i = 0; i < store.size(); i++) {
                         int j = i + 1;
-                        System.out.println(j + ". " + store[i].toString());
+                        System.out.println(j + ". " + store.get(i).toString());
                     }
                 }
 
@@ -58,12 +58,12 @@ public class Callie {
 
                     // error 2: bad task specified
                     int taskNumber = Integer.parseInt(parts[1]);
-                    if (taskNumber < 1 || taskNumber > counter) {
+                    if (taskNumber < 1 || taskNumber > store.size()) {
                         throw new IllegalArgumentException("wait, your task doesn't exist!");
                     }
                     int index = taskNumber - 1;
 
-                    Task task = store[index];
+                    Task task = store.get(index);
                     if (input.startsWith("mark")) {
                         if (task.isDone) {
                             System.out.println(" Task is already done.");
@@ -83,6 +83,24 @@ public class Callie {
                     }
                 }
 
+                // delete some task
+                else if (input.startsWith("delete")) {
+                    String[] parts = input.split(" ");
+                    if (parts.length < 2) {
+                        throw new IllegalArgumentException("umm... you need to specify which task to delete.");
+                    }
+
+                    int taskNumber = Integer.parseInt(parts[1]);
+                    if (taskNumber < 1 || taskNumber > store.size()) {
+                        throw new IllegalArgumentException("wait, your task doesn't exist!");
+                    }
+
+                    Task removed = store.remove(taskNumber - 1);
+
+                    System.out.println(" sure, happy to make your to-do lists shorter :)");
+                    System.out.println(" removed: " + removed);
+                }
+
                 // add some task
                 else {
                     // add a deadline
@@ -92,8 +110,7 @@ public class Callie {
                             throw new IllegalArgumentException(" Please specify your task with the word 'by'.");
                         }
                         Deadline newTask = new Deadline(parts[0].substring(9), parts[1]);
-                        store[counter] = newTask;
-                        counter++;
+                        store.add(newTask);
                         System.out.println("added: " + newTask);
                     }
 
@@ -108,8 +125,7 @@ public class Callie {
                             throw new IllegalArgumentException(" Please specify your task with the word 'from' and 'to'.");
                         }
                         Event newTask = new Event(parts[0].substring(6), dates[0], dates[1]);
-                        store[counter] = newTask;
-                        counter++;
+                        store.add(newTask);
                         System.out.println("added: " + newTask);
                     }
 
@@ -121,8 +137,7 @@ public class Callie {
                             throw new IllegalArgumentException("umm... you need to specify a task name.");
                         }
                         ToDo newTask = new ToDo(ToDoName);
-                        store[counter] = newTask;
-                        counter++;
+                        store.add(newTask);
                         System.out.println("added: " + newTask);
                     }
 
