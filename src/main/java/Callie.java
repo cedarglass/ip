@@ -8,6 +8,9 @@ public class Callie {
         System.out.println("Hello, I'm Callie! It's great to see you around today.\nWhat can I do for you?\n");
         printLine();
 
+        String[] store = new String[100];
+        int counter = 0;
+
         // repeat what the user types in (i.e. the input), except for when "bye" is typed
         while (true) {
             String input = sc.nextLine();
@@ -18,9 +21,22 @@ public class Callie {
                 break;
             }
 
-            printLine();
-            System.out.println(input);
-            printLine();
+            if (input.equals("list")) {
+                printLine();
+                for (int i = 0; i < counter; i++) {
+                    int j = i + 1;
+                    System.out.println(j + ". " + store[i]);
+                }
+                printLine();
+            }
+
+            else {
+                printLine();
+                System.out.println("added: " + input);
+                store[counter] = input;
+                counter++;
+                printLine();
+            }
         }
 
         // shutdown protocols
