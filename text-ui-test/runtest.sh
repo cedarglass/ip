@@ -12,6 +12,13 @@ then
     rm ACTUAL.TXT
 fi
 
+# seed storage data for deterministic load tests
+if [ ! -d "../data" ]
+then
+    mkdir ../data
+fi
+cp seed-data.txt ../data/callie.txt
+
 # compile the code into the bin folder, terminates if error occurred
 if ! javac -cp ../src/main/java -Xlint:none -d ../bin ../src/main/java/*.java
 then

@@ -1,8 +1,8 @@
 list
 todo read book
 todo return book
-deadline buy bread by Sunday
-event project meeting from Mon 2pm to Mon 4pm
+deadline buy bread by 2019-10-15
+event project meeting from 2019-10-16 to 2019-10-17
 list
 mark
 mark 10
@@ -10,7 +10,10 @@ mark 2
 mark 2
 unmark 2
 unmark 2
+delete 1
+list
 deadline wash clothes
 event concert from Fri 7pm
 blah
+clear
 bye

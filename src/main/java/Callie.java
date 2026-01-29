@@ -19,29 +19,26 @@ public class Callie {
      */
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
-
-        printLine();
-        System.out.println("Hello, I'm Callie! It's great to see you around today.\nWhat can I do for you?\n");
-        printLine();
+        Ui ui = new Ui();
+        ui.showWelcome();
 
         Storage storage = new Storage("./data/callie.txt");
         ArrayList<Task> store = storage.loadTasks();
 
         while (true) {
             String input = sc.nextLine();
-            printLine();
+            ui.showLine();
 
             try {
                 // exit
                 if (input.equals("bye")) {
-                    System.out.println(" Bye. Hope to see you again soon!");
-                    printLine();
+                    ui.showGoodbye();
                     break;
                 }
 
                 // list
                 if (input.equals("list")) {
-                    listTasks(store);
+                    ui.showTaskList(store);
                 }
 
                 // mark
@@ -65,20 +62,20 @@ public class Callie {
                     Task task = store.get(index);
                     if (input.startsWith("mark")) {
                         if (task.isDone) {
-                    System.out.println(" Task is already done.");
+                            ui.showMessage(" Task is already done.");
                         } else {
                             task.done();
-                            System.out.println(" I've marked this task as done.");
-                            System.out.println(taskNumber + ". " + task);
+                            ui.showMessage(" I've marked this task as done.");
+                            ui.showMessage(taskNumber + ". " + task);
                             saveTasks(storage, store);
                         }
                     } else {
                         if (!task.isDone) {
-                            System.out.println(" Task is already unmarked.");
+                            ui.showMessage(" Task is already unmarked.");
                         } else {
                             task.reset();
-                            System.out.println(" I've unmarked this task.");
-                            System.out.println(taskNumber + ". " + task);
+                            ui.showMessage(" I've unmarked this task.");
+                            ui.showMessage(taskNumber + ". " + task);
                             saveTasks(storage, store);
                         }
                     }
@@ -98,8 +95,8 @@ public class Callie {
 
                     Task removed = store.remove(taskNumber - 1);
 
-                    System.out.println(" sure, happy to make your to-do lists shorter :)");
-                    System.out.println(" removed: " + removed);
+                    ui.showMessage(" sure, happy to make your to-do lists shorter :)");
+                    ui.showMessage(" removed: " + removed);
                     saveTasks(storage, store);
                 }
 
@@ -107,7 +104,7 @@ public class Callie {
                 else if (input.equals("clear")) {
                     int removedCount = store.size();
                     store.clear();
-                    System.out.println(" Okay! I cleared " + removedCount + " task(s).");
+                    ui.showMessage(" Okay! I cleared " + removedCount + " task(s).");
                     saveTasks(storage, store);
                 }
 
@@ -123,7 +120,7 @@ public class Callie {
                         LocalDate deadlineDate = parseDate(dateText);
                         Deadline newTask = new Deadline(parts[0].substring(9), deadlineDate);
                         store.add(newTask);
-                        System.out.println("added: " + newTask);
+                        ui.showMessage("added: " + newTask);
                         saveTasks(storage, store);
                     }
 
@@ -141,7 +138,7 @@ public class Callie {
                         LocalDate endDate = parseDate(dates[1].trim());
                         Event newTask = new Event(parts[0].substring(6), startDate, endDate);
                         store.add(newTask);
-                        System.out.println("added: " + newTask);
+                        ui.showMessage("added: " + newTask);
                         saveTasks(storage, store);
                     }
 
@@ -154,7 +151,7 @@ public class Callie {
                         }
                         ToDo newTask = new ToDo(ToDoName);
                         store.add(newTask);
-                        System.out.println("added: " + newTask);
+                        ui.showMessage("added: " + newTask);
                         saveTasks(storage, store);
                     }
 
@@ -164,9 +161,9 @@ public class Callie {
                     }
                 }
             } catch (IllegalArgumentException e) {
-                System.out.println(e.getMessage());
+                ui.showMessage(e.getMessage());
             }
-            printLine();
+            ui.showLine();
         }
 
         // shutdown protocols
@@ -176,18 +173,6 @@ public class Callie {
     /**
      * Prints a visual divider line to separate chatbot outputs.
      */
-    private static void printLine() {
-        System.out.println("____________________________________________________________");
-    }
-
-    private static void listTasks(ArrayList<Task> store) {
-        System.out.println(" Here are your current tasks in a list:");
-        for (int i = 0; i < store.size(); i++) {
-            int j = i + 1;
-            System.out.println(j + ". " + store.get(i).toString());
-        }
-    }
-
     private static void saveTasks(Storage storage, ArrayList<Task> store) {
         try {
             storage.saveTasks(store);
