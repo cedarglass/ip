@@ -50,4 +50,31 @@ public abstract class Task {
     protected void reset() {
         this.isDone = false;
     }
+
+    /**
+     * Returns whether the task is completed.
+     *
+     * @return True if the task is done.
+     */
+    public boolean isDone() {
+        return isDone;
+    }
+
+    /**
+     * Returns the task description.
+     *
+     * @return The task name.
+     */
+    public String getName() {
+        return name;
+    }
+
+    /**
+     * Sets the completion status of the task.
+     *
+     * @param done The new completion status.
+     */
+    public void setDone(boolean done) {
+        this.isDone = done;
+    }
 }
