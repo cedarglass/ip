@@ -1,8 +1,12 @@
+package callie.ui;
+
+import java.util.Scanner;
+
+import callie.task.TaskList;
+
 /**
  * Handles user interaction formatting for the chatbot.
  */
-import java.util.Scanner;
-
 public class Ui {
     private final Scanner scanner;
 
@@ -21,6 +25,7 @@ public class Ui {
     public Ui(Scanner scanner) {
         this.scanner = scanner;
     }
+
     /**
      * Prints the welcome message.
      */
@@ -61,7 +66,10 @@ public class Ui {
      */
     public void showTaskList(TaskList tasks) {
         System.out.println(" Here are your current tasks in a list:");
-        System.out.println(tasks.toString());
+        for (int i = 0; i < tasks.getSize(); i++) {
+            int index = i + 1;
+            System.out.println(index + ". " + tasks.getTask(i));
+        }
     }
 
     /**

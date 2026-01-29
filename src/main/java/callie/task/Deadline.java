@@ -1,3 +1,5 @@
+package callie.task;
+
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
@@ -49,8 +51,6 @@ public class Deadline extends Task {
         if (this.isDone) {
             return "[D] [X] " + name + " (by: " + deadline.format(OUTPUT_FORMAT) + ")";
         }
-        else {
-            return "[D] [ ] " + name + " (by: " + deadline.format(OUTPUT_FORMAT) + ")";
-        }
+        return "[D] [ ] " + name + " (by: " + deadline.format(OUTPUT_FORMAT) + ")";
     }
 }

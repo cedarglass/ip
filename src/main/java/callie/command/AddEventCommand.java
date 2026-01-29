@@ -1,4 +1,11 @@
+package callie.command;
+
 import java.time.LocalDate;
+
+import callie.storage.Storage;
+import callie.task.Event;
+import callie.task.TaskList;
+import callie.ui.Ui;
 
 /**
  * Command to add an event task.

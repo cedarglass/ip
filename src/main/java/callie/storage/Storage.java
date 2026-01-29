@@ -1,3 +1,5 @@
+package callie.storage;
+
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -5,6 +7,11 @@ import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+
+import callie.task.Deadline;
+import callie.task.Event;
+import callie.task.Task;
+import callie.task.ToDo;
 
 /**
  * Handles loading and saving tasks to disk.
@@ -26,18 +33,15 @@ public class Storage {
      *
      * @return The list of tasks loaded from disk.
      */
-    public TaskList loadTasks() {
-        ArrayList<Task> arrList = new ArrayList<>();
-        TaskList tasks = new TaskList(arrList);
-
-        // loads File
+    public ArrayList<Task> loadTasks() {
+        ArrayList<Task> tasks = new ArrayList<>();
         if (!Files.exists(filePath)) {
             return tasks;
         }
 
         List<String> lines;
         try {
-            lines = Files.readAllLines(filePath); // reads File
+            lines = Files.readAllLines(filePath);
         } catch (IOException e) {
             return tasks;
         }
@@ -45,7 +49,7 @@ public class Storage {
         for (String line : lines) {
             Task parsed = parseLine(line);
             if (parsed != null) {
-                tasks.addTask(parsed);
+                tasks.add(parsed);
             }
         }
 
@@ -58,18 +62,17 @@ public class Storage {
      * @param tasks The list of tasks to save.
      * @throws IOException If writing fails.
      */
-    public void saveTasks(TaskList tasks) throws IOException {
+    public void saveTasks(List<Task> tasks) throws IOException {
         Path parent = filePath.getParent();
         if (parent != null) {
             Files.createDirectories(parent);
         }
 
         List<String> lines = new ArrayList<>();
-        for (int i = 0; i < tasks.getSize(); i++) {
-            Task task = tasks.getTask(i);
+        for (Task task : tasks) {
             lines.add(formatLine(task));
         }
-        Files.write(filePath, lines); // writes to File
+        Files.write(filePath, lines);
     }
 
     private Task parseLine(String line) {

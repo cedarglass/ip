@@ -1,3 +1,11 @@
+package callie;
+
+import callie.command.Command;
+import callie.parser.Parser;
+import callie.storage.Storage;
+import callie.task.TaskList;
+import callie.ui.Ui;
+
 /**
  * The main entry point for the Callie chatbot application.
  * <p>
@@ -16,7 +24,7 @@ public class Callie {
         ui.showWelcome();
 
         Storage storage = new Storage("./data/callie.txt");
-        TaskList tasks = storage.loadTasks();
+        TaskList tasks = new TaskList(storage.loadTasks());
 
         boolean isExit = false;
         while (!isExit) {

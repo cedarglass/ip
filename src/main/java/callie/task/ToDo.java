@@ -1,3 +1,5 @@
+package callie.task;
+
 /**
  * Represents a simple to-do task without any date or time constraints.
  */
@@ -22,8 +24,6 @@ public class ToDo extends Task {
         if (this.isDone) {
             return "[T] [X] " + name;
         }
-        else {
-            return "[T] [ ] " + name;
-        }
+        return "[T] [ ] " + name;
     }
 }

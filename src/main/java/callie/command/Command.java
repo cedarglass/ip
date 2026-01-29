@@ -1,4 +1,10 @@
+package callie.command;
+
 import java.io.IOException;
+
+import callie.storage.Storage;
+import callie.task.TaskList;
+import callie.ui.Ui;
 
 /**
  * Represents a user command.
@@ -31,7 +37,7 @@ public abstract class Command {
      */
     protected void saveTasks(TaskList tasks, Storage storage, Ui ui) {
         try {
-            storage.saveTasks(tasks);
+            storage.saveTasks(tasks.getTasks());
         } catch (IOException e) {
             ui.showMessage(" Sorry, I couldn't save your tasks just now.");
         }

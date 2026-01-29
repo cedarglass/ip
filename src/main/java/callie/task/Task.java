@@ -1,4 +1,5 @@
-// use OOP to clarify code
+package callie.task;
+
 /**
  * An abstract representation of a task.
  * <p>
@@ -32,22 +33,20 @@ public abstract class Task {
         if (this.isDone) {
             return "[X] " + name;
         }
-        else {
-            return "[ ] " + name;
-        }
+        return "[ ] " + name;
     }
 
     /**
      * Marks the task as completed.
      */
-    protected void done() {
+    public void done() {
         this.isDone = true;
     }
 
     /**
      * Marks the task as not completed.
      */
-    protected void reset() {
+    public void reset() {
         this.isDone = false;
     }
 

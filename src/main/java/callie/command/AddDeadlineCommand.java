@@ -1,4 +1,11 @@
+package callie.command;
+
 import java.time.LocalDate;
+
+import callie.storage.Storage;
+import callie.task.Deadline;
+import callie.task.TaskList;
+import callie.ui.Ui;
 
 /**
  * Command to add a deadline task.

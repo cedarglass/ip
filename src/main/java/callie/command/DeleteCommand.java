@@ -1,3 +1,10 @@
+package callie.command;
+
+import callie.storage.Storage;
+import callie.task.Task;
+import callie.task.TaskList;
+import callie.ui.Ui;
+
 /**
  * Command to delete a task.
  */

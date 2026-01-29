@@ -1,3 +1,5 @@
+package callie.task;
+
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
@@ -71,10 +73,8 @@ public class Event extends Task {
             return "[E] [X] " + name + " (from: " + start.format(OUTPUT_FORMAT)
                     + " to: " + end.format(OUTPUT_FORMAT) + ")";
         }
-        else {
-            return "[E] [ ] " + name + " (from: " + start.format(OUTPUT_FORMAT)
-                    + " to: " + end.format(OUTPUT_FORMAT) + ")";
-        }
+        return "[E] [ ] " + name + " (from: " + start.format(OUTPUT_FORMAT)
+                + " to: " + end.format(OUTPUT_FORMAT) + ")";
     }
 
 }
