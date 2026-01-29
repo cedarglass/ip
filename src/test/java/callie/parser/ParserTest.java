@@ -28,6 +28,7 @@ public class ParserTest {
         assertThrows(IllegalArgumentException.class, () -> Parser.parse("deadline read book"));
         assertThrows(IllegalArgumentException.class, () -> Parser.parse("event meeting from 2019-12-01"));
         assertThrows(IllegalArgumentException.class, () -> Parser.parse("todo"));
+        assertThrows(IllegalArgumentException.class, () -> Parser.parse("find"));
         assertThrows(IllegalArgumentException.class, () -> Parser.parse("nonsense"));
     }
 }
