@@ -2,6 +2,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -81,23 +82,28 @@ public class Storage {
         boolean isDone = "1".equals(doneFlag);
 
         Task task;
-        switch (type) {
-        case "T":
-            task = new ToDo(name);
-            break;
-        case "D":
-            if (parts.length < 4) {
+        try {
+            switch (type) {
+            case "T":
+                task = new ToDo(name);
+                break;
+            case "D":
+                if (parts.length < 4) {
+                    return null;
+                }
+                task = new Deadline(name, LocalDate.parse(parts[3].trim()));
+                break;
+            case "E":
+                if (parts.length < 5) {
+                    return null;
+                }
+                task = new Event(name, LocalDate.parse(parts[3].trim()),
+                        LocalDate.parse(parts[4].trim()));
+                break;
+            default:
                 return null;
             }
-            task = new Deadline(name, parts[3].trim());
-            break;
-        case "E":
-            if (parts.length < 5) {
-                return null;
-            }
-            task = new Event(name, parts[3].trim(), parts[4].trim());
-            break;
-        default:
+        } catch (Exception e) {
             return null;
         }
 
