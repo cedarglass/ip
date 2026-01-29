@@ -12,6 +12,7 @@ import callie.command.DeleteCommand;
 import callie.command.ListCommand;
 import callie.command.MarkCommand;
 import callie.command.UnmarkCommand;
+import callie.command.FindCommand;
 
 /**
  * Parses user input into command objects.
@@ -59,6 +60,10 @@ public class Parser {
             LocalDate start = parseDate(parts[1]);
             LocalDate end = parseDate(parts[2]);
             return new AddEventCommand(parts[0], start, end);
+        }
+        if (input.startsWith("find")) {
+            String searchString = parseSearchString(input);
+            return new FindCommand(searchString);
         }
         throw new IllegalArgumentException(" Please specify your relevant task type.");
     }
@@ -112,5 +117,13 @@ public class Parser {
         } catch (Exception e) {
             throw new IllegalArgumentException(" Please use date format yyyy-mm-dd.");
         }
+    }
+
+    private static String parseSearchString(String input) {
+        String name = input.substring(4).trim();
+        if (name.isEmpty()) {
+            throw new IllegalArgumentException("umm... you need to specify a search string.");
+        }
+        return name;
     }
 }
