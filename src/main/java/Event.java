@@ -19,6 +19,24 @@ public class Event extends Task {
     }
 
     /**
+     * Returns the start time for this event.
+     *
+     * @return The start time.
+     */
+    public String getStart() {
+        return start;
+    }
+
+    /**
+     * Returns the end time for this event.
+     *
+     * @return The end time.
+     */
+    public String getEnd() {
+        return end;
+    }
+
+    /**
      * Returns a string representation of the event task.
      *
      * @return A formatted string indicating the task type, completion status,

@@ -1,3 +1,4 @@
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -22,7 +23,8 @@ public class Callie {
         System.out.println("Hello, I'm Callie! It's great to see you around today.\nWhat can I do for you?\n");
         printLine();
 
-        ArrayList<Task> store = new ArrayList<>();
+        Storage storage = new Storage("./data/callie.txt");
+        ArrayList<Task> store = storage.loadTasks();
 
         while (true) {
             String input = sc.nextLine();
@@ -38,11 +40,7 @@ public class Callie {
 
                 // list
                 if (input.equals("list")) {
-                    System.out.println(" Here are your current tasks in a list:");
-                    for (int i = 0; i < store.size(); i++) {
-                        int j = i + 1;
-                        System.out.println(j + ". " + store.get(i).toString());
-                    }
+                    listTasks(store);
                 }
 
                 // mark
@@ -66,11 +64,12 @@ public class Callie {
                     Task task = store.get(index);
                     if (input.startsWith("mark")) {
                         if (task.isDone) {
-                            System.out.println(" Task is already done.");
+                    System.out.println(" Task is already done.");
                         } else {
                             task.done();
                             System.out.println(" I've marked this task as done.");
                             System.out.println(taskNumber + ". " + task);
+                            saveTasks(storage, store);
                         }
                     } else {
                         if (!task.isDone) {
@@ -79,6 +78,7 @@ public class Callie {
                             task.reset();
                             System.out.println(" I've unmarked this task.");
                             System.out.println(taskNumber + ". " + task);
+                            saveTasks(storage, store);
                         }
                     }
                 }
@@ -99,6 +99,15 @@ public class Callie {
 
                     System.out.println(" sure, happy to make your to-do lists shorter :)");
                     System.out.println(" removed: " + removed);
+                    saveTasks(storage, store);
+                }
+
+                // clear all tasks
+                else if (input.equals("clear")) {
+                    int removedCount = store.size();
+                    store.clear();
+                    System.out.println(" Okay! I cleared " + removedCount + " task(s).");
+                    saveTasks(storage, store);
                 }
 
                 // add some task
@@ -112,6 +121,7 @@ public class Callie {
                         Deadline newTask = new Deadline(parts[0].substring(9), parts[1]);
                         store.add(newTask);
                         System.out.println("added: " + newTask);
+                        saveTasks(storage, store);
                     }
 
                     // add an event
@@ -127,6 +137,7 @@ public class Callie {
                         Event newTask = new Event(parts[0].substring(6), dates[0], dates[1]);
                         store.add(newTask);
                         System.out.println("added: " + newTask);
+                        saveTasks(storage, store);
                     }
 
                     // add a 'ToDo'
@@ -139,6 +150,7 @@ public class Callie {
                         ToDo newTask = new ToDo(ToDoName);
                         store.add(newTask);
                         System.out.println("added: " + newTask);
+                        saveTasks(storage, store);
                     }
 
                     // reject everything else
@@ -161,5 +173,21 @@ public class Callie {
      */
     private static void printLine() {
         System.out.println("____________________________________________________________");
+    }
+
+    private static void listTasks(ArrayList<Task> store) {
+        System.out.println(" Here are your current tasks in a list:");
+        for (int i = 0; i < store.size(); i++) {
+            int j = i + 1;
+            System.out.println(j + ". " + store.get(i).toString());
+        }
+    }
+
+    private static void saveTasks(Storage storage, ArrayList<Task> store) {
+        try {
+            storage.saveTasks(store);
+        } catch (IOException e) {
+            System.out.println(" Sorry, I couldn't save your tasks just now.");
+        }
     }
 }
