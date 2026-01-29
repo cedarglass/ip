@@ -19,7 +19,8 @@ import callie.command.FindCommand;
  */
 public class Parser {
     /**
-     * Parses the given input into a command.
+     * Parses the given input by extracting any necessary strings or indices.
+     * Then, feeds them into a command.
      *
      * @param input The raw user input.
      * @return The corresponding command.
