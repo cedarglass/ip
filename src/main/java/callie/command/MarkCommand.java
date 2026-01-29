@@ -20,6 +20,13 @@ public class MarkCommand extends Command {
         this.taskNumber = taskNumber;
     }
 
+    /**
+     * Executes the mark command.
+     *
+     * @param tasks   The task list to update.
+     * @param ui      The UI to show messages.
+     * @param storage The storage handler.
+     */
     @Override
     public void execute(TaskList tasks, Ui ui, Storage storage) {
         if (taskNumber < 1 || taskNumber > tasks.getSize()) {

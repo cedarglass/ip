@@ -71,6 +71,11 @@ public class TaskList {
         return tasks;
     }
 
+    /**
+     * Returns a multi-line string of tasks.
+     *
+     * @return The formatted task list.
+     */
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();

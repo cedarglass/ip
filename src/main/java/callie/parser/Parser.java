@@ -63,6 +63,13 @@ public class Parser {
         throw new IllegalArgumentException(" Please specify your relevant task type.");
     }
 
+    /**
+     * Parses the task index from a command.
+     *
+     * @param input The raw user input.
+     * @param missingMessage Error message when index is missing.
+     * @return The parsed one-based index.
+     */
     private static int parseIndex(String input, String missingMessage) {
         String[] parts = input.split(" ");
         if (parts.length < 2) {
@@ -75,6 +82,12 @@ public class Parser {
         }
     }
 
+    /**
+     * Parses the task name from a todo command.
+     *
+     * @param input The raw user input.
+     * @return The task name.
+     */
     private static String parseTodoName(String input) {
         String name = input.substring(4).trim();
         if (name.isEmpty()) {
@@ -83,6 +96,12 @@ public class Parser {
         return name;
     }
 
+    /**
+     * Parses a deadline command into task name and date text.
+     *
+     * @param input The raw user input.
+     * @return An array of [name, dateText].
+     */
     private static String[] parseDeadline(String input) {
         String[] parts = input.split(" by ");
         if (parts.length < 2) {
@@ -93,6 +112,12 @@ public class Parser {
         return new String[] { name, dateText };
     }
 
+    /**
+     * Parses an event command into task name, start date text, and end date text.
+     *
+     * @param input The raw user input.
+     * @return An array of [name, startDateText, endDateText].
+     */
     private static String[] parseEvent(String input) {
         String[] parts = input.split(" from ");
         if (parts.length < 2) {
@@ -106,6 +131,12 @@ public class Parser {
         return new String[] { name, dates[0].trim(), dates[1].trim() };
     }
 
+    /**
+     * Parses an ISO date (yyyy-mm-dd) into a LocalDate.
+     *
+     * @param dateText The date text to parse.
+     * @return The parsed LocalDate.
+     */
     private static LocalDate parseDate(String dateText) {
         try {
             return LocalDate.parse(dateText);
