@@ -1,5 +1,3 @@
-import java.util.ArrayList;
-
 /**
  * Handles user interaction formatting for the chatbot.
  */
@@ -42,12 +40,9 @@ public class Ui {
      *
      * @param tasks The tasks to show.
      */
-    public void showTaskList(ArrayList<Task> tasks) {
+    public void showTaskList(TaskList tasks) {
         System.out.println(" Here are your current tasks in a list:");
-        for (int i = 0; i < tasks.size(); i++) {
-            int index = i + 1;
-            System.out.println(index + ". " + tasks.get(i));
-        }
+        System.out.println(tasks.toString());
     }
 
     /**

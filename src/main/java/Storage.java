@@ -26,8 +26,9 @@ public class Storage {
      *
      * @return The list of tasks loaded from disk.
      */
-    public ArrayList<Task> loadTasks() {
-        ArrayList<Task> tasks = new ArrayList<>();
+    public TaskList loadTasks() {
+        ArrayList<Task> arrList = new ArrayList<>();
+        TaskList tasks = new TaskList(arrList);
 
         // loads File
         if (!Files.exists(filePath)) {
@@ -44,7 +45,7 @@ public class Storage {
         for (String line : lines) {
             Task parsed = parseLine(line);
             if (parsed != null) {
-                tasks.add(parsed);
+                tasks.addTask(parsed);
             }
         }
 
@@ -57,14 +58,15 @@ public class Storage {
      * @param tasks The list of tasks to save.
      * @throws IOException If writing fails.
      */
-    public void saveTasks(List<Task> tasks) throws IOException {
+    public void saveTasks(TaskList tasks) throws IOException {
         Path parent = filePath.getParent();
         if (parent != null) {
             Files.createDirectories(parent);
         }
 
         List<String> lines = new ArrayList<>();
-        for (Task task : tasks) {
+        for (int i = 0; i < tasks.getSize(); i++) {
+            Task task = tasks.getTask(i);
             lines.add(formatLine(task));
         }
         Files.write(filePath, lines); // writes to File

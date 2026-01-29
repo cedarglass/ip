@@ -1,6 +1,5 @@
 import java.io.IOException;
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.Scanner;
 
 /**
@@ -24,7 +23,7 @@ public class Callie {
         ui.showWelcome();
 
         Storage storage = new Storage("./data/callie.txt");
-        ArrayList<Task> store = storage.loadTasks();
+        TaskList store = storage.loadTasks();
 
         while (true) {
             String input = sc.nextLine();
@@ -47,12 +46,12 @@ public class Callie {
                     int taskNumber = parser.parseIndex(input, "umm... you need to specify your task.");
 
                     // error 2: bad task specified
-                    if (taskNumber < 1 || taskNumber > store.size()) {
+                    if (taskNumber < 1 || taskNumber > store.getSize()) {
                         throw new IllegalArgumentException("wait, your task doesn't exist!");
                     }
                     int index = taskNumber - 1;
 
-                    Task task = store.get(index);
+                    Task task = store.getTask(index);
                     if (parser.isMark(input)) {
                         if (task.isDone) {
                             ui.showMessage(" Task is already done.");
@@ -78,11 +77,11 @@ public class Callie {
                 else if (parser.isDelete(input)) {
                     int taskNumber = parser.parseIndex(input,
                             "umm... you need to specify which task to delete.");
-                    if (taskNumber < 1 || taskNumber > store.size()) {
+                    if (taskNumber < 1 || taskNumber > store.getSize()) {
                         throw new IllegalArgumentException("wait, your task doesn't exist!");
                     }
 
-                    Task removed = store.remove(taskNumber - 1);
+                    Task removed = store.removeTask(taskNumber - 1);
 
                     ui.showMessage(" sure, happy to make your to-do lists shorter :)");
                     ui.showMessage(" removed: " + removed);
@@ -91,8 +90,8 @@ public class Callie {
 
                 // clear all tasks
                 else if (parser.isClear(input)) {
-                    int removedCount = store.size();
-                    store.clear();
+                    int removedCount = store.getSize();
+                    store.clearTasks();
                     ui.showMessage(" Okay! I cleared " + removedCount + " task(s).");
                     saveTasks(storage, store);
                 }
@@ -104,7 +103,7 @@ public class Callie {
                         String[] parts = parser.parseDeadline(input);
                         LocalDate deadlineDate = parseDate(parts[1]);
                         Deadline newTask = new Deadline(parts[0], deadlineDate);
-                        store.add(newTask);
+                        store.addTask(newTask);
                         ui.showMessage("added: " + newTask);
                         saveTasks(storage, store);
                     }
@@ -115,7 +114,7 @@ public class Callie {
                         LocalDate startDate = parseDate(parts[1]);
                         LocalDate endDate = parseDate(parts[2]);
                         Event newTask = new Event(parts[0], startDate, endDate);
-                        store.add(newTask);
+                        store.addTask(newTask);
                         ui.showMessage("added: " + newTask);
                         saveTasks(storage, store);
                     }
@@ -124,7 +123,7 @@ public class Callie {
                     else if (parser.isTodo(input)) {
                         String todoName = parser.parseTodoName(input);
                         ToDo newTask = new ToDo(todoName);
-                        store.add(newTask);
+                        store.addTask(newTask);
                         ui.showMessage("added: " + newTask);
                         saveTasks(storage, store);
                     }
@@ -147,7 +146,7 @@ public class Callie {
     /**
      * Prints a visual divider line to separate chatbot outputs.
      */
-    private static void saveTasks(Storage storage, ArrayList<Task> store) {
+    private static void saveTasks(Storage storage, TaskList store) {
         try {
             storage.saveTasks(store);
         } catch (IOException e) {
