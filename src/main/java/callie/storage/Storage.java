@@ -75,6 +75,12 @@ public class Storage {
         Files.write(filePath, lines);
     }
 
+    /**
+     * Parses a single line into a task, or returns null if invalid.
+     *
+     * @param line The raw line from storage.
+     * @return The parsed task, or null if invalid.
+     */
     private Task parseLine(String line) {
         String[] parts = line.split("\\s*\\|\\s*");
         if (parts.length < 3) {
@@ -116,6 +122,12 @@ public class Storage {
         return task;
     }
 
+    /**
+     * Formats a task into a storage line.
+     *
+     * @param task The task to format.
+     * @return The formatted line.
+     */
     private String formatLine(Task task) {
         String doneFlag = task.isDone() ? "1" : "0";
         if (task instanceof ToDo) {
