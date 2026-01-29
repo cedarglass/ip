@@ -1,52 +1,68 @@
+import java.time.LocalDate;
+
 /**
- * Parses user input into command components.
+ * Parses user input into command objects.
  */
 public class Parser {
-    public boolean isBye(String input) {
-        return input.equals("bye");
+    /**
+     * Parses the given input into a command.
+     *
+     * @param input The raw user input.
+     * @return The corresponding command.
+     */
+    public static Command parse(String input) {
+        if (input.equals("bye")) {
+            return new ByeCommand();
+        }
+        if (input.equals("list")) {
+            return new ListCommand();
+        }
+        if (input.equals("clear")) {
+            return new ClearCommand();
+        }
+        if (input.startsWith("mark")) {
+            int index = parseIndex(input, "umm... you need to specify your task.");
+            return new MarkCommand(index);
+        }
+        if (input.startsWith("unmark")) {
+            int index = parseIndex(input, "umm... you need to specify your task.");
+            return new UnmarkCommand(index);
+        }
+        if (input.startsWith("delete")) {
+            int index = parseIndex(input, "umm... you need to specify which task to delete.");
+            return new DeleteCommand(index);
+        }
+        if (input.startsWith("todo")) {
+            String name = parseTodoName(input);
+            return new AddTodoCommand(name);
+        }
+        if (input.startsWith("deadline")) {
+            String[] parts = parseDeadline(input);
+            LocalDate date = parseDate(parts[1]);
+            return new AddDeadlineCommand(parts[0], date);
+        }
+        if (input.startsWith("event")) {
+            String[] parts = parseEvent(input);
+            LocalDate start = parseDate(parts[1]);
+            LocalDate end = parseDate(parts[2]);
+            return new AddEventCommand(parts[0], start, end);
+        }
+        throw new IllegalArgumentException(" Please specify your relevant task type.");
     }
 
-    public boolean isList(String input) {
-        return input.equals("list");
-    }
-
-    public boolean isClear(String input) {
-        return input.equals("clear");
-    }
-
-    public boolean isMark(String input) {
-        return input.startsWith("mark");
-    }
-
-    public boolean isUnmark(String input) {
-        return input.startsWith("unmark");
-    }
-
-    public boolean isDelete(String input) {
-        return input.startsWith("delete");
-    }
-
-    public boolean isTodo(String input) {
-        return input.startsWith("todo");
-    }
-
-    public boolean isDeadline(String input) {
-        return input.startsWith("deadline");
-    }
-
-    public boolean isEvent(String input) {
-        return input.startsWith("event");
-    }
-
-    public int parseIndex(String input, String missingMessage) {
+    private static int parseIndex(String input, String missingMessage) {
         String[] parts = input.split(" ");
         if (parts.length < 2) {
             throw new IllegalArgumentException(missingMessage);
         }
-        return Integer.parseInt(parts[1]);
+        try {
+            return Integer.parseInt(parts[1]);
+        } catch (NumberFormatException e) {
+            throw new IllegalArgumentException("wait, your task doesn't exist!");
+        }
     }
 
-    public String parseTodoName(String input) {
+    private static String parseTodoName(String input) {
         String name = input.substring(4).trim();
         if (name.isEmpty()) {
             throw new IllegalArgumentException("umm... you need to specify a task name.");
@@ -54,7 +70,7 @@ public class Parser {
         return name;
     }
 
-    public String[] parseDeadline(String input) {
+    private static String[] parseDeadline(String input) {
         String[] parts = input.split(" by ");
         if (parts.length < 2) {
             throw new IllegalArgumentException(" Please specify your task with the word 'by'.");
@@ -64,7 +80,7 @@ public class Parser {
         return new String[] { name, dateText };
     }
 
-    public String[] parseEvent(String input) {
+    private static String[] parseEvent(String input) {
         String[] parts = input.split(" from ");
         if (parts.length < 2) {
             throw new IllegalArgumentException(" Please specify your task with the word 'from' and 'to'.");
@@ -75,5 +91,13 @@ public class Parser {
         }
         String name = parts[0].substring(6).trim();
         return new String[] { name, dates[0].trim(), dates[1].trim() };
+    }
+
+    private static LocalDate parseDate(String dateText) {
+        try {
+            return LocalDate.parse(dateText);
+        } catch (Exception e) {
+            throw new IllegalArgumentException(" Please use date format yyyy-mm-dd.");
+        }
     }
 }

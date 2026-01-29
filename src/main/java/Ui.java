@@ -1,7 +1,26 @@
 /**
  * Handles user interaction formatting for the chatbot.
  */
+import java.util.Scanner;
+
 public class Ui {
+    private final Scanner scanner;
+
+    /**
+     * Creates a UI with standard input.
+     */
+    public Ui() {
+        this(new Scanner(System.in));
+    }
+
+    /**
+     * Creates a UI with a provided scanner.
+     *
+     * @param scanner The scanner to read input from.
+     */
+    public Ui(Scanner scanner) {
+        this.scanner = scanner;
+    }
     /**
      * Prints the welcome message.
      */
@@ -50,5 +69,21 @@ public class Ui {
      */
     public void showLoadingError() {
         System.out.println(" Sorry, I couldn't load your tasks.");
+    }
+
+    /**
+     * Reads the next command from the user.
+     *
+     * @return The input line.
+     */
+    public String readCommand() {
+        return scanner.nextLine();
+    }
+
+    /**
+     * Closes the input scanner.
+     */
+    public void close() {
+        scanner.close();
     }
 }
