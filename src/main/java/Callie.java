@@ -1,4 +1,5 @@
 import java.io.IOException;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -118,7 +119,9 @@ public class Callie {
                         if (parts.length < 2) {
                             throw new IllegalArgumentException(" Please specify your task with the word 'by'.");
                         }
-                        Deadline newTask = new Deadline(parts[0].substring(9), parts[1]);
+                        String dateText = parts[1].trim();
+                        LocalDate deadlineDate = parseDate(dateText);
+                        Deadline newTask = new Deadline(parts[0].substring(9), deadlineDate);
                         store.add(newTask);
                         System.out.println("added: " + newTask);
                         saveTasks(storage, store);
@@ -134,7 +137,9 @@ public class Callie {
                         if (dates.length < 2) {
                             throw new IllegalArgumentException(" Please specify your task with the word 'from' and 'to'.");
                         }
-                        Event newTask = new Event(parts[0].substring(6), dates[0], dates[1]);
+                        LocalDate startDate = parseDate(dates[0].trim());
+                        LocalDate endDate = parseDate(dates[1].trim());
+                        Event newTask = new Event(parts[0].substring(6), startDate, endDate);
                         store.add(newTask);
                         System.out.println("added: " + newTask);
                         saveTasks(storage, store);
@@ -188,6 +193,14 @@ public class Callie {
             storage.saveTasks(store);
         } catch (IOException e) {
             System.out.println(" Sorry, I couldn't save your tasks just now.");
+        }
+    }
+
+    private static LocalDate parseDate(String dateText) {
+        try {
+            return LocalDate.parse(dateText);
+        } catch (Exception e) {
+            throw new IllegalArgumentException(" Please use date format yyyy-mm-dd.");
         }
     }
 }

@@ -1,9 +1,14 @@
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+
 /**
  * Represents an event task that occurs over a specific time period.
  */
 public class Event extends Task {
-    protected String end;
-    protected String start;
+    private static final DateTimeFormatter OUTPUT_FORMAT =
+            DateTimeFormatter.ofPattern("MMM dd yyyy");
+    protected LocalDate end;
+    protected LocalDate start;
 
     /**
      * Constructs an Event task with a name, start time, and end time.
@@ -12,7 +17,7 @@ public class Event extends Task {
      * @param start The start time of the event.
      * @param end   The end time of the event.
      */
-    public Event(String name, String start, String end) {
+    public Event(String name, LocalDate start, LocalDate end) {
         super(name);
         this.start = start;
         this.end = end;
@@ -24,7 +29,7 @@ public class Event extends Task {
      * @return The start time.
      */
     public String getStart() {
-        return start;
+        return start.toString();
     }
 
     /**
@@ -33,6 +38,24 @@ public class Event extends Task {
      * @return The end time.
      */
     public String getEnd() {
+        return end.toString();
+    }
+
+    /**
+     * Returns the start date.
+     *
+     * @return The start date.
+     */
+    public LocalDate getStartDate() {
+        return start;
+    }
+
+    /**
+     * Returns the end date.
+     *
+     * @return The end date.
+     */
+    public LocalDate getEndDate() {
         return end;
     }
 
@@ -45,10 +68,12 @@ public class Event extends Task {
     @Override
     public String toString() {
         if (this.isDone) {
-            return "[E] [X] " + name + " (from: " + start + " to: " + end + ")";
+            return "[E] [X] " + name + " (from: " + start.format(OUTPUT_FORMAT)
+                    + " to: " + end.format(OUTPUT_FORMAT) + ")";
         }
         else {
-            return "[E] [ ] " + name + " (from: " + start + " to: " + end + ")";
+            return "[E] [ ] " + name + " (from: " + start.format(OUTPUT_FORMAT)
+                    + " to: " + end.format(OUTPUT_FORMAT) + ")";
         }
     }
 
