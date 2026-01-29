@@ -20,6 +20,7 @@ public class Callie {
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
         Ui ui = new Ui();
+        Parser parser = new Parser();
         ui.showWelcome();
 
         Storage storage = new Storage("./data/callie.txt");
@@ -31,36 +32,28 @@ public class Callie {
 
             try {
                 // exit
-                if (input.equals("bye")) {
+                if (parser.isBye(input)) {
                     ui.showGoodbye();
                     break;
                 }
 
                 // list
-                if (input.equals("list")) {
+                if (parser.isList(input)) {
                     ui.showTaskList(store);
                 }
 
                 // mark
-                else if (input.startsWith("mark") || input.startsWith("unmark")) {
-                    // process inputs
-                    String[] parts = input.split(" ");
-
-                    // error handling
-                    // error 1: no task specified
-                    if (parts.length < 2) {
-                        throw new IllegalArgumentException("umm... you need to specify your task.");
-                    }
+                else if (parser.isMark(input) || parser.isUnmark(input)) {
+                    int taskNumber = parser.parseIndex(input, "umm... you need to specify your task.");
 
                     // error 2: bad task specified
-                    int taskNumber = Integer.parseInt(parts[1]);
                     if (taskNumber < 1 || taskNumber > store.size()) {
                         throw new IllegalArgumentException("wait, your task doesn't exist!");
                     }
                     int index = taskNumber - 1;
 
                     Task task = store.get(index);
-                    if (input.startsWith("mark")) {
+                    if (parser.isMark(input)) {
                         if (task.isDone) {
                             ui.showMessage(" Task is already done.");
                         } else {
@@ -82,13 +75,9 @@ public class Callie {
                 }
 
                 // delete some task
-                else if (input.startsWith("delete")) {
-                    String[] parts = input.split(" ");
-                    if (parts.length < 2) {
-                        throw new IllegalArgumentException("umm... you need to specify which task to delete.");
-                    }
-
-                    int taskNumber = Integer.parseInt(parts[1]);
+                else if (parser.isDelete(input)) {
+                    int taskNumber = parser.parseIndex(input,
+                            "umm... you need to specify which task to delete.");
                     if (taskNumber < 1 || taskNumber > store.size()) {
                         throw new IllegalArgumentException("wait, your task doesn't exist!");
                     }
@@ -101,7 +90,7 @@ public class Callie {
                 }
 
                 // clear all tasks
-                else if (input.equals("clear")) {
+                else if (parser.isClear(input)) {
                     int removedCount = store.size();
                     store.clear();
                     ui.showMessage(" Okay! I cleared " + removedCount + " task(s).");
@@ -111,45 +100,30 @@ public class Callie {
                 // add some task
                 else {
                     // add a deadline
-                    if (input.startsWith("deadline")) {
-                        String[] parts = input.split(" by ");
-                        if (parts.length < 2) {
-                            throw new IllegalArgumentException(" Please specify your task with the word 'by'.");
-                        }
-                        String dateText = parts[1].trim();
-                        LocalDate deadlineDate = parseDate(dateText);
-                        Deadline newTask = new Deadline(parts[0].substring(9), deadlineDate);
+                    if (parser.isDeadline(input)) {
+                        String[] parts = parser.parseDeadline(input);
+                        LocalDate deadlineDate = parseDate(parts[1]);
+                        Deadline newTask = new Deadline(parts[0], deadlineDate);
                         store.add(newTask);
                         ui.showMessage("added: " + newTask);
                         saveTasks(storage, store);
                     }
 
                     // add an event
-                    else if (input.startsWith("event")) {
-                        String[] parts = input.split(" from ");
-                        if (parts.length < 2) {
-                            throw new IllegalArgumentException(" Please specify your task with the word 'from' and 'to'.");
-                        }
-                        String[] dates = parts[1].split(" to ");
-                        if (dates.length < 2) {
-                            throw new IllegalArgumentException(" Please specify your task with the word 'from' and 'to'.");
-                        }
-                        LocalDate startDate = parseDate(dates[0].trim());
-                        LocalDate endDate = parseDate(dates[1].trim());
-                        Event newTask = new Event(parts[0].substring(6), startDate, endDate);
+                    else if (parser.isEvent(input)) {
+                        String[] parts = parser.parseEvent(input);
+                        LocalDate startDate = parseDate(parts[1]);
+                        LocalDate endDate = parseDate(parts[2]);
+                        Event newTask = new Event(parts[0], startDate, endDate);
                         store.add(newTask);
                         ui.showMessage("added: " + newTask);
                         saveTasks(storage, store);
                     }
 
                     // add a 'ToDo'
-                    else if (input.startsWith("todo")) {
-                        // remove all leading and trailing whitespaces
-                        String ToDoName = input.substring(4).trim();
-                        if (ToDoName.isEmpty()) {
-                            throw new IllegalArgumentException("umm... you need to specify a task name.");
-                        }
-                        ToDo newTask = new ToDo(ToDoName);
+                    else if (parser.isTodo(input)) {
+                        String todoName = parser.parseTodoName(input);
+                        ToDo newTask = new ToDo(todoName);
                         store.add(newTask);
                         ui.showMessage("added: " + newTask);
                         saveTasks(storage, store);
