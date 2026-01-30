@@ -43,6 +43,14 @@ public class UiTest {
     }
 
     @Test
+    public void showTaskList_emptyTaskList_printsMessage() {
+        TaskList list = new TaskList(new java.util.ArrayList<>());
+        Ui ui = new Ui(new java.util.Scanner(new ByteArrayInputStream(new byte[0])));
+        String output = captureOutput(() -> ui.showTaskList(list));
+        assertTrue(output.contains("Seems like your to-do list is empty!"));
+    }
+
+    @Test
     public void readCommand_readsNextLine() {
         ByteArrayInputStream in = new ByteArrayInputStream("list\n".getBytes(StandardCharsets.UTF_8));
         Ui ui = new Ui(new java.util.Scanner(in));

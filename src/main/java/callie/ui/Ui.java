@@ -65,10 +65,14 @@ public class Ui {
      * @param tasks The tasks to show.
      */
     public void showTaskList(TaskList tasks) {
-        System.out.println(" Here are your current tasks in a list:");
-        for (int i = 0; i < tasks.getSize(); i++) {
-            int index = i + 1;
-            System.out.println(index + ". " + tasks.getTask(i));
+        if (tasks.getSize() == 0) {
+            System.out.println("Seems like your to-do list is empty!");
+        } else {
+            System.out.println(" Here are your current tasks in a list:");
+            for (int i = 0; i < tasks.getSize(); i++) {
+                int index = i + 1;
+                System.out.println(index + ". " + tasks.getTask(i));
+            }
         }
     }
 

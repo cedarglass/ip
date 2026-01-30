@@ -30,6 +30,13 @@ public class FindCommand extends Command {
                 matches.add(task);
             }
         }
-        ui.showFilteredTaskList(new TaskList(matches));
+
+        if (matches.isEmpty()) {
+            ui.showMessage(" I couldn't find any matches for '" + searchString + "'!");
+            ui.showMessage(" Are you sure you got that right?");
+        }
+        else {
+            ui.showFilteredTaskList(new TaskList(matches));
+        }
     }
 }

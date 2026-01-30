@@ -102,6 +102,16 @@ public class CommandTest {
         assertEquals(2, ui.lastFilteredSize);
     }
 
+    @Test
+    public void findCommand_emptyTaskList_printsMessage() {
+        TaskList tasks = new TaskList(new ArrayList<>());
+        RecordingUi ui = new RecordingUi();
+
+        new FindCommand("book").execute(tasks, ui, new Storage(tempDir.resolve("data/callie.txt").toString()));
+        assertTrue(ui.messages.get(0).contains("I couldn't find any matches for 'book'!"));
+        assertTrue(ui.messages.get(1).contains(" Are you sure you got that right?"));
+    }
+
     private static class RecordingUi extends Ui {
         private final List<String> messages = new ArrayList<>();
         private int listShownCount = 0;
