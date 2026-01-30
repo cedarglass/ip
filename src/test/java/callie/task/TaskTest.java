@@ -25,12 +25,22 @@ public class TaskTest {
     }
 
     @Test
-    public void deadline_and_event_formatDates() {
+    public void deadline_formatDates() {
         Deadline deadline = new Deadline("return book", LocalDate.parse("2019-10-15"));
         assertEquals("2019-10-15", deadline.getDeadline());
         assertEquals(LocalDate.parse("2019-10-15"), deadline.getDeadlineDate());
         assertEquals("[D] [ ] return book (by: Oct 15 2019)", deadline.toString());
 
+        Event event = new Event("meeting", LocalDate.parse("2019-10-16"), LocalDate.parse("2019-10-17"));
+        assertEquals("2019-10-16", event.getStart());
+        assertEquals("2019-10-17", event.getEnd());
+        assertEquals(LocalDate.parse("2019-10-16"), event.getStartDate());
+        assertEquals(LocalDate.parse("2019-10-17"), event.getEndDate());
+        assertEquals("[E] [ ] meeting (from: Oct 16 2019 to: Oct 17 2019)", event.toString());
+    }
+
+    @Test
+    public void event_formatDates() {
         Event event = new Event("meeting", LocalDate.parse("2019-10-16"), LocalDate.parse("2019-10-17"));
         assertEquals("2019-10-16", event.getStart());
         assertEquals("2019-10-17", event.getEnd());

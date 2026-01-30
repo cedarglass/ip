@@ -1,11 +1,11 @@
 package callie.command;
 
+import java.util.ArrayList;
+
 import callie.storage.Storage;
 import callie.task.Task;
 import callie.task.TaskList;
 import callie.ui.Ui;
-
-import java.util.ArrayList;
 
 /**
  * Command to find all tasks containing a search string.
@@ -34,8 +34,7 @@ public class FindCommand extends Command {
         if (matches.isEmpty()) {
             ui.showMessage(" I couldn't find any matches for '" + searchString + "'!");
             ui.showMessage(" Are you sure you got that right?");
-        }
-        else {
+        } else {
             ui.showFilteredTaskList(new TaskList(matches));
         }
     }

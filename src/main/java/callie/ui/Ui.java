@@ -82,7 +82,7 @@ public class Ui {
      * @param filteredTasks The tasks to show.
      */
     public void showFilteredTaskList(TaskList filteredTasks) {
-        System.out.println(" I've found "+ filteredTasks.getSize() + " matching task(s)!");
+        System.out.println(" I've found " + filteredTasks.getSize() + " matching task(s)!");
         for (int i = 0; i < filteredTasks.getSize(); i++) {
             int index = i + 1;
             System.out.println(index + ". " + filteredTasks.getTask(i));
