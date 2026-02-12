@@ -9,15 +9,18 @@ import callie.command.ByeCommand;
 import callie.command.ClearCommand;
 import callie.command.Command;
 import callie.command.DeleteCommand;
+import callie.command.FindCommand;
 import callie.command.ListCommand;
 import callie.command.MarkCommand;
 import callie.command.UnmarkCommand;
-import callie.command.FindCommand;
+
 
 /**
  * Parses user input into command objects.
  */
 public class Parser {
+    private static final String MISSING_MESSAGE = " umm... you need to specify your task.";
+
     /**
      * Parses the given input by extracting any necessary strings or indices.
      * Then, feeds them into a command.
@@ -36,19 +39,19 @@ public class Parser {
             return new ClearCommand();
         }
         if (input.startsWith("mark")) {
-            int index = parseIndex(input, "umm... you need to specify your task.");
+            int index = parseIndex(input, MISSING_MESSAGE);
             return new MarkCommand(index);
         }
         if (input.startsWith("unmark")) {
-            int index = parseIndex(input, "umm... you need to specify your task.");
+            int index = parseIndex(input, MISSING_MESSAGE);
             return new UnmarkCommand(index);
         }
         if (input.startsWith("delete")) {
-            int index = parseIndex(input, "umm... you need to specify which task to delete.");
+            int index = parseIndex(input, MISSING_MESSAGE);
             return new DeleteCommand(index);
         }
         if (input.startsWith("todo")) {
-            String name = parseTodoName(input);
+            String name = parseTodoName(input, MISSING_MESSAGE);
             return new AddTodoCommand(name);
         }
         if (input.startsWith("deadline")) {
@@ -66,7 +69,7 @@ public class Parser {
             String searchString = parseSearchString(input);
             return new FindCommand(searchString);
         }
-        throw new IllegalArgumentException(" Please specify your relevant task type.");
+        throw new IllegalArgumentException(MISSING_MESSAGE);
     }
 
     /**
@@ -94,10 +97,10 @@ public class Parser {
      * @param input The raw user input.
      * @return The task name.
      */
-    private static String parseTodoName(String input) {
+    private static String parseTodoName(String input, String missingMessage) {
         String name = input.substring(4).trim();
         if (name.isEmpty()) {
-            throw new IllegalArgumentException("umm... you need to specify a task name.");
+            throw new IllegalArgumentException(missingMessage);
         }
         return name;
     }
