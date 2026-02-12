@@ -19,6 +19,7 @@ public class Logic {
      * @param storage The storage handler.
      */
     public Logic(Storage storage) {
+        assert storage != null : "Storage must be initialized before Logic.";
         this.storage = storage;
         this.tasks = new TaskList(storage.loadTasks());
         this.shouldExit = false;
@@ -40,6 +41,7 @@ public class Logic {
      * @return The response to display.
      */
     public String getResponse(String input) {
+        assert input != null : "User input should not be null.";
         try {
             Command command = Parser.parse(input);
             command.execute(tasks, new GuiUi(), storage);
