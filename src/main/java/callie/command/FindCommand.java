@@ -24,9 +24,10 @@ public class FindCommand extends Command {
 
     @Override
     public void execute(TaskList tasks, Ui ui, Storage storage) {
-        ArrayList<Task> matches = new ArrayList<Task>();
+        ArrayList<Task> matches = new ArrayList<>();
+        String normalizedSearch = searchString.toLowerCase();
         for (Task task : tasks.getTasks()) {
-            if (task.getName().toLowerCase().contains(searchString.toLowerCase())) {
+            if (task.getName().toLowerCase().contains(normalizedSearch)) {
                 matches.add(task);
             }
         }
