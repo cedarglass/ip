@@ -30,106 +30,100 @@ public class Parser {
      */
     public static Command parse(String input) {
         assert input != null : "Input string for parsing should not be null.";
-        if (input.equals("bye")) {
+        String trimmed = input.trim();
+        String[] parts = trimmed.split(" ", 2);
+        String keyword = parts[0];
+        String rest = parts.length > 1 ? parts[1].trim() : "";
+
+        switch (keyword) {
+        case "bye":
             return new ByeCommand();
-        }
-        if (input.equals("list")) {
+        case "list":
             return new ListCommand();
-        }
-        if (input.equals("clear")) {
+        case "clear":
             return new ClearCommand();
+        case "mark":
+            return new MarkCommand(parseIndex(rest, MISSING_MESSAGE));
+        case "unmark":
+            return new UnmarkCommand(parseIndex(rest, MISSING_MESSAGE));
+        case "delete":
+            return new DeleteCommand(parseIndex(rest, MISSING_MESSAGE));
+        case "todo":
+            return new AddTodoCommand(parseTodoName(rest, MISSING_MESSAGE));
+        case "deadline": {
+            String[] deadlineParts = parseDeadline(rest);
+            LocalDate date = parseDate(deadlineParts[1]);
+            return new AddDeadlineCommand(deadlineParts[0], date);
         }
-        if (input.startsWith("mark")) {
-            int index = parseIndex(input, MISSING_MESSAGE);
-            return new MarkCommand(index);
+        case "event": {
+            String[] eventParts = parseEvent(rest);
+            LocalDate start = parseDate(eventParts[1]);
+            LocalDate end = parseDate(eventParts[2]);
+            return new AddEventCommand(eventParts[0], start, end);
         }
-        if (input.startsWith("unmark")) {
-            int index = parseIndex(input, MISSING_MESSAGE);
-            return new UnmarkCommand(index);
+        case "find":
+            return new FindCommand(parseSearchString(rest));
+        default:
+            throw new IllegalArgumentException(MISSING_MESSAGE);
         }
-        if (input.startsWith("delete")) {
-            int index = parseIndex(input, MISSING_MESSAGE);
-            return new DeleteCommand(index);
-        }
-        if (input.startsWith("todo")) {
-            String name = parseTodoName(input, MISSING_MESSAGE);
-            return new AddTodoCommand(name);
-        }
-        if (input.startsWith("deadline")) {
-            String[] parts = parseDeadline(input);
-            LocalDate date = parseDate(parts[1]);
-            return new AddDeadlineCommand(parts[0], date);
-        }
-        if (input.startsWith("event")) {
-            String[] parts = parseEvent(input);
-            LocalDate start = parseDate(parts[1]);
-            LocalDate end = parseDate(parts[2]);
-            return new AddEventCommand(parts[0], start, end);
-        }
-        if (input.startsWith("find")) {
-            String searchString = parseSearchString(input);
-            return new FindCommand(searchString);
-        }
-        throw new IllegalArgumentException(MISSING_MESSAGE);
     }
 
     /**
-     * Parses the task index from a command.
+     * Parses the task index from the command payload.
      *
-     * @param input The raw user input.
+     * @param rest The text after the command keyword.
      * @param missingMessage Error message when index is missing.
      * @return The parsed one-based index.
      */
-    private static int parseIndex(String input, String missingMessage) {
-        String[] parts = input.split(" ");
-        if (parts.length < 2) {
+    private static int parseIndex(String rest, String missingMessage) {
+        if (rest.isEmpty()) {
             throw new IllegalArgumentException(missingMessage);
         }
         try {
-            return Integer.parseInt(parts[1]);
+            return Integer.parseInt(rest);
         } catch (NumberFormatException e) {
             throw new IllegalArgumentException("wait, your task doesn't exist!");
         }
     }
 
     /**
-     * Parses the task name from a todo command.
+     * Parses the task name from a todo command payload.
      *
-     * @param input The raw user input.
+     * @param rest The text after the command keyword.
+     * @param missingMessage Error message when index is missing.
      * @return The task name.
      */
-    private static String parseTodoName(String input, String missingMessage) {
-        String name = input.substring(4).trim();
-        if (name.isEmpty()) {
+    private static String parseTodoName(String rest, String missingMessage) {
+        if (rest.isEmpty()) {
             throw new IllegalArgumentException(missingMessage);
         }
-        return name;
+        return rest;
     }
 
     /**
-     * Parses a deadline command into task name and date text.
+     * Parses a deadline command payload into task name and date text.
      *
-     * @param input The raw user input.
+     * @param rest The text after the command keyword.
      * @return An array of [name, dateText].
      */
-    private static String[] parseDeadline(String input) {
-        String[] parts = input.split(" by ");
+    private static String[] parseDeadline(String rest) {
+        String[] parts = rest.split(" by ");
         if (parts.length < 2) {
             throw new IllegalArgumentException(" Please specify your task with the word 'by'.");
         }
-        String name = parts[0].substring(9).trim();
+        String name = parts[0].trim();
         String dateText = parts[1].trim();
         return new String[] { name, dateText };
     }
 
     /**
-     * Parses an event command into task name, start date text, and end date text.
+     * Parses an event command payload into task name, start date text, and end date text.
      *
-     * @param input The raw user input.
+     * @param rest The text after the command keyword.
      * @return An array of [name, startDateText, endDateText].
      */
-    private static String[] parseEvent(String input) {
-        String[] parts = input.split(" from ");
+    private static String[] parseEvent(String rest) {
+        String[] parts = rest.split(" from ");
         if (parts.length < 2) {
             throw new IllegalArgumentException(" Please specify your task with the word 'from' and 'to'.");
         }
@@ -137,7 +131,7 @@ public class Parser {
         if (dates.length < 2) {
             throw new IllegalArgumentException(" Please specify your task with the word 'from' and 'to'.");
         }
-        String name = parts[0].substring(6).trim();
+        String name = parts[0].trim();
         return new String[] { name, dates[0].trim(), dates[1].trim() };
     }
 
@@ -155,11 +149,16 @@ public class Parser {
         }
     }
 
-    private static String parseSearchString(String input) {
-        String name = input.substring(4).trim();
-        if (name.isEmpty()) {
+    /**
+     * Parses the search string from a find command payload.
+     *
+     * @param rest The text after the command keyword.
+     * @return The search string.
+     */
+    private static String parseSearchString(String rest) {
+        if (rest.isEmpty()) {
             throw new IllegalArgumentException("umm... you need to specify a search string.");
         }
-        return name;
+        return rest;
     }
 }
