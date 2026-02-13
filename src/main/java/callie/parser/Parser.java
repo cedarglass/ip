@@ -29,6 +29,7 @@ public class Parser {
      * @return The corresponding command.
      */
     public static Command parse(String input) {
+        assert input != null : "Input string for parsing should not be null.";
         if (input.equals("bye")) {
             return new ByeCommand();
         }

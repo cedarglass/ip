@@ -34,6 +34,7 @@ public class Storage {
      * @return The list of tasks loaded from disk.
      */
     public ArrayList<Task> loadTasks() {
+        assert filePath != null : "File path must be set before loading tasks.";
         ArrayList<Task> tasks = new ArrayList<>();
         if (!Files.exists(filePath)) {
             return tasks;
@@ -63,6 +64,7 @@ public class Storage {
      * @throws IOException If writing fails.
      */
     public void saveTasks(List<Task> tasks) throws IOException {
+        assert tasks != null : "Tasks list must not be null when saving.";
         Path parent = filePath.getParent();
         if (parent != null) {
             Files.createDirectories(parent);
