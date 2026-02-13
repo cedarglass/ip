@@ -1,6 +1,8 @@
 package callie.parser;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 import callie.command.AddDeadlineCommand;
 import callie.command.AddEventCommand;
@@ -8,11 +10,11 @@ import callie.command.AddTodoCommand;
 import callie.command.ByeCommand;
 import callie.command.ClearCommand;
 import callie.command.Command;
-import callie.command.DeleteCommand;
+import callie.command.BulkDeleteCommand;
+import callie.command.BulkMarkCommand;
+import callie.command.BulkUnmarkCommand;
 import callie.command.FindCommand;
 import callie.command.ListCommand;
-import callie.command.MarkCommand;
-import callie.command.UnmarkCommand;
 
 
 /**
@@ -43,11 +45,11 @@ public class Parser {
         case "clear":
             return new ClearCommand();
         case "mark":
-            return new MarkCommand(parseIndex(rest, MISSING_MESSAGE));
+            return new BulkMarkCommand(parseIndices(rest, MISSING_MESSAGE));
         case "unmark":
-            return new UnmarkCommand(parseIndex(rest, MISSING_MESSAGE));
+            return new BulkUnmarkCommand(parseIndices(rest, MISSING_MESSAGE));
         case "delete":
-            return new DeleteCommand(parseIndex(rest, MISSING_MESSAGE));
+            return new BulkDeleteCommand(parseIndices(rest, MISSING_MESSAGE));
         case "todo":
             return new AddTodoCommand(parseTodoName(rest, MISSING_MESSAGE));
         case "deadline": {
@@ -69,21 +71,64 @@ public class Parser {
     }
 
     /**
-     * Parses the task index from the command payload.
+     * Parses a list of one-based indices from the command payload.
      *
      * @param rest The text after the command keyword.
      * @param missingMessage Error message when index is missing.
-     * @return The parsed one-based index.
+     * @return The parsed list of indices.
      */
-    private static int parseIndex(String rest, String missingMessage) {
+    private static List<Integer> parseIndices(String rest, String missingMessage) {
         if (rest.isEmpty()) {
             throw new IllegalArgumentException(missingMessage);
         }
+        String normalized = rest.replace(",", " ");
+        String[] tokens = normalized.trim().split("\\s+");
+        List<Integer> indices = new ArrayList<>();
+        for (String token : tokens) {
+            if (token.contains("-")) {
+                indices.addAll(parseRange(token));
+            } else {
+                indices.add(parseSingleIndex(token));
+            }
+        }
+        return indices;
+    }
+
+    /**
+     * Parses a single index token.
+     *
+     * @param token The token containing a number.
+     * @return The parsed index.
+     */
+    private static int parseSingleIndex(String token) {
         try {
-            return Integer.parseInt(rest);
+            return Integer.parseInt(token);
         } catch (NumberFormatException e) {
             throw new IllegalArgumentException("wait, your task doesn't exist!");
         }
+    }
+
+    /**
+     * Parses a range token (e.g. 2-5) into individual indices.
+     *
+     * @param token The range token.
+     * @return The expanded list of indices.
+     */
+    private static List<Integer> parseRange(String token) {
+        String[] bounds = token.split("-");
+        if (bounds.length != 2) {
+            throw new IllegalArgumentException("wait, your task doesn't exist!");
+        }
+        int start = parseSingleIndex(bounds[0].trim());
+        int end = parseSingleIndex(bounds[1].trim());
+        if (start > end) {
+            throw new IllegalArgumentException("wait, your task doesn't exist!");
+        }
+        List<Integer> indices = new ArrayList<>();
+        for (int i = start; i <= end; i++) {
+            indices.add(i);
+        }
+        return indices;
     }
 
     /**

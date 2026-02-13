@@ -59,9 +59,9 @@ public class CommandTest {
         tasks.addTask(new ToDo("b"));
         RecordingUi ui = new RecordingUi();
 
-        new MarkCommand(1).execute(tasks, ui, storage);
-        new UnmarkCommand(1).execute(tasks, ui, storage);
-        new DeleteCommand(2).execute(tasks, ui, storage);
+        new BulkMarkCommand(List.of(1)).execute(tasks, ui, storage);
+        new BulkUnmarkCommand(List.of(1)).execute(tasks, ui, storage);
+        new BulkDeleteCommand(List.of(2)).execute(tasks, ui, storage);
         new ClearCommand().execute(tasks, ui, storage);
 
         assertEquals(0, tasks.getSize());

@@ -7,19 +7,19 @@ import org.junit.jupiter.api.Test;
 
 import callie.command.AddDeadlineCommand;
 import callie.command.AddTodoCommand;
+import callie.command.BulkDeleteCommand;
+import callie.command.BulkMarkCommand;
+import callie.command.BulkUnmarkCommand;
 import callie.command.ClearCommand;
-import callie.command.DeleteCommand;
-import callie.command.MarkCommand;
-import callie.command.UnmarkCommand;
 
 public class ParserTest {
     @Test
     public void parse_validCommands_returnsCommandTypes() {
         assertInstanceOf(AddTodoCommand.class, Parser.parse("todo read book"));
         assertInstanceOf(AddDeadlineCommand.class, Parser.parse("deadline return book by 2019-12-01"));
-        assertInstanceOf(MarkCommand.class, Parser.parse("mark 1"));
-        assertInstanceOf(UnmarkCommand.class, Parser.parse("unmark 2"));
-        assertInstanceOf(DeleteCommand.class, Parser.parse("delete 3"));
+        assertInstanceOf(BulkMarkCommand.class, Parser.parse("mark 1"));
+        assertInstanceOf(BulkUnmarkCommand.class, Parser.parse("unmark 2"));
+        assertInstanceOf(BulkDeleteCommand.class, Parser.parse("delete 3"));
         assertInstanceOf(ClearCommand.class, Parser.parse("clear"));
     }
 
