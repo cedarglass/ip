@@ -11,6 +11,7 @@ import callie.task.TaskList;
 public class Logic {
     private final Storage storage;
     private final TaskList tasks;
+    private final GuiUi ui;
     private boolean shouldExit;
 
     /**
@@ -22,6 +23,7 @@ public class Logic {
         assert storage != null : "Storage must be initialized before Logic.";
         this.storage = storage;
         this.tasks = new TaskList(storage.loadTasks());
+        this.ui = new GuiUi();
         this.shouldExit = false;
     }
 
@@ -44,12 +46,11 @@ public class Logic {
         assert input != null : "User input should not be null.";
         try {
             Command command = Parser.parse(input);
-            command.execute(tasks, new GuiUi(), storage);
+            ui.reset();
+            command.execute(tasks, ui, storage);
             shouldExit = command.isExit();
 
-            // previously, in execute(), the UI would print the necessary messages.
-            // however, the GUI now stores the messages in a String, and then returns it!
-            return GuiUi.flushMessages();
+            return ui.flushMessages();
         } catch (IllegalArgumentException e) {
             return e.getMessage();
         }

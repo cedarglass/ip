@@ -1,7 +1,5 @@
 package callie.ui;
 
-import callie.command.ByeCommand;
-import callie.command.Command;
 import callie.logic.Logic;
 
 import javafx.fxml.FXML;

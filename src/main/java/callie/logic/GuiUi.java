@@ -1,7 +1,9 @@
 package callie.logic;
 
+import java.io.ByteArrayInputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 
 import callie.task.TaskList;
 import callie.ui.Ui;
@@ -11,20 +13,34 @@ import callie.ui.Ui;
  * Extends the UI class to avoid renaming existing methods.
  */
 public class GuiUi extends Ui {
-    private static final List<String> messages = new ArrayList<>();
+    private final List<String> messages = new ArrayList<>();
 
     /**
-     * Clears any collected messages and returns the concatenated response.
+     * Creates a GUI UI with a dummy input stream.
+     */
+    public GuiUi() {
+        super(new Scanner(new ByteArrayInputStream(new byte[0])));
+    }
+
+    /**
+     * Returns the concatenated response and clears the buffer.
      *
      * @return The combined response string.
      */
-    public static String flushMessages() {
+    public String flushMessages() {
         if (messages.isEmpty()) {
             return "";
         }
         String combined = String.join(System.lineSeparator(), messages);
         messages.clear();
         return combined;
+    }
+
+    /**
+     * Clears any collected messages without returning them.
+     */
+    public void reset() {
+        messages.clear();
     }
 
     @Override
@@ -34,6 +50,10 @@ public class GuiUi extends Ui {
 
     @Override
     public void showTaskList(TaskList tasks) {
+        if (tasks.getSize() == 0) {
+            messages.add("Seems like your to-do list is empty!");
+            return;
+        }
         messages.add(" Here are your current tasks in a list:");
         for (int i = 0; i < tasks.getSize(); i++) {
             int index = i + 1;
