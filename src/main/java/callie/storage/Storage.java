@@ -5,6 +5,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -104,14 +105,14 @@ public class Storage {
                 if (parts.length < 4) {
                     return null;
                 }
-                task = new Deadline(name, LocalDate.parse(parts[3].trim()));
+                task = new Deadline(name, parseDateTime(parts[3].trim()));
                 break;
             case "E":
                 if (parts.length < 5) {
                     return null;
                 }
-                task = new Event(name, LocalDate.parse(parts[3].trim()),
-                        LocalDate.parse(parts[4].trim()));
+                task = new Event(name, parseDateTime(parts[3].trim()),
+                        parseDateTime(parts[4].trim()));
                 break;
             default:
                 return null;
@@ -145,5 +146,13 @@ public class Storage {
                     + " | " + event.getStart() + " | " + event.getEnd();
         }
         return "T | " + doneFlag + " | " + task.getName();
+    }
+
+    private LocalDateTime parseDateTime(String text) {
+        try {
+            return LocalDateTime.parse(text);
+        } catch (Exception e) {
+            return LocalDate.parse(text).atStartOfDay();
+        }
     }
 }

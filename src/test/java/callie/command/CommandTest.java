@@ -7,7 +7,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import java.io.ByteArrayInputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -43,10 +43,10 @@ public class CommandTest {
         TaskList tasks = new TaskList(new ArrayList<>());
         RecordingUi ui = new RecordingUi();
 
-        new AddDeadlineCommand("return book", LocalDate.parse("2019-10-15"))
+        new AddDeadlineCommand("return book", LocalDateTime.parse("2019-10-15T09:30"))
                 .execute(tasks, ui, storage);
-        new AddEventCommand("meeting", LocalDate.parse("2019-10-16"),
-                LocalDate.parse("2019-10-17")).execute(tasks, ui, storage);
+        new AddEventCommand("meeting", LocalDateTime.parse("2019-10-16T10:00"),
+                LocalDateTime.parse("2019-10-17T12:15")).execute(tasks, ui, storage);
 
         assertEquals(2, tasks.getSize());
     }

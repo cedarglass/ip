@@ -1,6 +1,6 @@
 package callie.task;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 /**
@@ -8,8 +8,8 @@ import java.time.format.DateTimeFormatter;
  */
 public class Deadline extends Task {
     private static final DateTimeFormatter OUTPUT_FORMAT =
-            DateTimeFormatter.ofPattern("MMM dd yyyy");
-    protected LocalDate deadline;
+            DateTimeFormatter.ofPattern("MMM dd yyyy HH:mm");
+    protected LocalDateTime deadline;
 
     /**
      * Constructs a Deadline task with a name and deadline.
@@ -17,7 +17,7 @@ public class Deadline extends Task {
      * @param name     The description of the task.
      * @param deadline The deadline by which the task should be completed.
      */
-    public Deadline(String name, LocalDate deadline) {
+    public Deadline(String name, LocalDateTime deadline) {
         super(name);
         this.deadline = deadline;
     }
@@ -32,11 +32,11 @@ public class Deadline extends Task {
     }
 
     /**
-     * Returns the deadline as a LocalDate.
+     * Returns the deadline as a LocalDateTime.
      *
-     * @return The deadline date.
+     * @return The deadline date-time.
      */
-    public LocalDate getDeadlineDate() {
+    public LocalDateTime getDeadlineDate() {
         return deadline;
     }
 

@@ -1,6 +1,6 @@
 package callie.task;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 /**
@@ -8,9 +8,9 @@ import java.time.format.DateTimeFormatter;
  */
 public class Event extends Task {
     private static final DateTimeFormatter OUTPUT_FORMAT =
-            DateTimeFormatter.ofPattern("MMM dd yyyy");
-    protected LocalDate end;
-    protected LocalDate start;
+            DateTimeFormatter.ofPattern("MMM dd yyyy HH:mm");
+    protected LocalDateTime end;
+    protected LocalDateTime start;
 
     /**
      * Constructs an Event task with a name, start time, and end time.
@@ -19,7 +19,7 @@ public class Event extends Task {
      * @param start The start time of the event.
      * @param end   The end time of the event.
      */
-    public Event(String name, LocalDate start, LocalDate end) {
+    public Event(String name, LocalDateTime start, LocalDateTime end) {
         super(name);
         this.start = start;
         this.end = end;
@@ -48,7 +48,7 @@ public class Event extends Task {
      *
      * @return The start date.
      */
-    public LocalDate getStartDate() {
+    public LocalDateTime getStartDate() {
         return start;
     }
 
@@ -57,7 +57,7 @@ public class Event extends Task {
      *
      * @return The end date.
      */
-    public LocalDate getEndDate() {
+    public LocalDateTime getEndDate() {
         return end;
     }
 

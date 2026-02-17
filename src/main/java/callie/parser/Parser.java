@@ -1,6 +1,8 @@
 package callie.parser;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -54,13 +56,13 @@ public class Parser {
             return new AddTodoCommand(parseTodoName(rest, MISSING_MESSAGE));
         case "deadline": {
             String[] deadlineParts = parseDeadline(rest);
-            LocalDate date = parseDate(deadlineParts[1]);
+            LocalDateTime date = parseDateTime(deadlineParts[1]);
             return new AddDeadlineCommand(deadlineParts[0], date);
         }
         case "event": {
             String[] eventParts = parseEvent(rest);
-            LocalDate start = parseDate(eventParts[1]);
-            LocalDate end = parseDate(eventParts[2]);
+            LocalDateTime start = parseDateTime(eventParts[1]);
+            LocalDateTime end = parseDateTime(eventParts[2]);
             return new AddEventCommand(eventParts[0], start, end);
         }
         case "find":
@@ -152,9 +154,12 @@ public class Parser {
      * @return An array of [name, dateText].
      */
     private static String[] parseDeadline(String rest) {
+        if (!rest.contains("by")) {
+            throw new IllegalArgumentException(" Please specify your task with the word 'by'.");
+        }
         String[] parts = rest.split(" by ");
         if (parts.length < 2) {
-            throw new IllegalArgumentException(" Please specify your task with the word 'by'.");
+            throw new IllegalArgumentException(" Please specify your event name!");
         }
         String name = parts[0].trim();
         String dateText = parts[1].trim();
@@ -168,29 +173,33 @@ public class Parser {
      * @return An array of [name, startDateText, endDateText].
      */
     private static String[] parseEvent(String rest) {
+        if (!rest.contains("from") || !rest.contains("to")) {
+            throw new IllegalArgumentException(" Please specify your task with the word 'from' and 'to'.");
+        }
         String[] parts = rest.split(" from ");
         if (parts.length < 2) {
-            throw new IllegalArgumentException(" Please specify your task with the word 'from' and 'to'.");
+            throw new IllegalArgumentException(" Please specify your event name!");
         }
         String[] dates = parts[1].split(" to ");
-        if (dates.length < 2) {
-            throw new IllegalArgumentException(" Please specify your task with the word 'from' and 'to'.");
-        }
         String name = parts[0].trim();
         return new String[] { name, dates[0].trim(), dates[1].trim() };
     }
 
     /**
-     * Parses an ISO date (yyyy-mm-dd) into a LocalDate.
+     * Parses a date or date-time into a LocalDateTime.
      *
      * @param dateText The date text to parse.
-     * @return The parsed LocalDate.
+     * @return The parsed LocalDateTime.
      */
-    private static LocalDate parseDate(String dateText) {
+    private static LocalDateTime parseDateTime(String dateText) {
         try {
-            return LocalDate.parse(dateText);
+            return LocalDateTime.parse(dateText, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
         } catch (Exception e) {
-            throw new IllegalArgumentException(" Please use date format yyyy-mm-dd.");
+            try {
+                return LocalDate.parse(dateText).atStartOfDay();
+            } catch (Exception e2) {
+                throw new IllegalArgumentException(" Please use date format yyyy-mm-dd or yyyy-mm-dd HH:mm.");
+            }
         }
     }
 

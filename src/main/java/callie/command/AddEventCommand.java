@@ -1,6 +1,6 @@
 package callie.command;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 import callie.storage.Storage;
 import callie.task.Event;
@@ -12,8 +12,8 @@ import callie.ui.Ui;
  */
 public class AddEventCommand extends Command {
     private final String name;
-    private final LocalDate start;
-    private final LocalDate end;
+    private final LocalDateTime start;
+    private final LocalDateTime end;
 
     /**
      * Creates an event command.
@@ -22,7 +22,7 @@ public class AddEventCommand extends Command {
      * @param start The start date.
      * @param end   The end date.
      */
-    public AddEventCommand(String name, LocalDate start, LocalDate end) {
+    public AddEventCommand(String name, LocalDateTime start, LocalDateTime end) {
         this.name = name;
         this.start = start;
         this.end = end;

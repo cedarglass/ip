@@ -1,6 +1,6 @@
 package callie.command;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 import callie.storage.Storage;
 import callie.task.Deadline;
@@ -12,7 +12,7 @@ import callie.ui.Ui;
  */
 public class AddDeadlineCommand extends Command {
     private final String name;
-    private final LocalDate deadline;
+    private final LocalDateTime deadline;
 
     /**
      * Creates a deadline command.
@@ -20,7 +20,7 @@ public class AddDeadlineCommand extends Command {
      * @param name     The task description.
      * @param deadline The deadline date.
      */
-    public AddDeadlineCommand(String name, LocalDate deadline) {
+    public AddDeadlineCommand(String name, LocalDateTime deadline) {
         this.name = name;
         this.deadline = deadline;
     }

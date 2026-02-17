@@ -4,7 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 import org.junit.jupiter.api.Test;
 
@@ -26,27 +26,29 @@ public class TaskTest {
 
     @Test
     public void deadline_formatDates() {
-        Deadline deadline = new Deadline("return book", LocalDate.parse("2019-10-15"));
-        assertEquals("2019-10-15", deadline.getDeadline());
-        assertEquals(LocalDate.parse("2019-10-15"), deadline.getDeadlineDate());
-        assertEquals("[D] [ ] return book (by: Oct 15 2019)", deadline.toString());
+        Deadline deadline = new Deadline("return book", LocalDateTime.parse("2019-10-15T09:30"));
+        assertEquals("2019-10-15T09:30", deadline.getDeadline());
+        assertEquals(LocalDateTime.parse("2019-10-15T09:30"), deadline.getDeadlineDate());
+        assertEquals("[D] [ ] return book (by: Oct 15 2019 09:30)", deadline.toString());
 
-        Event event = new Event("meeting", LocalDate.parse("2019-10-16"), LocalDate.parse("2019-10-17"));
-        assertEquals("2019-10-16", event.getStart());
-        assertEquals("2019-10-17", event.getEnd());
-        assertEquals(LocalDate.parse("2019-10-16"), event.getStartDate());
-        assertEquals(LocalDate.parse("2019-10-17"), event.getEndDate());
-        assertEquals("[E] [ ] meeting (from: Oct 16 2019 to: Oct 17 2019)", event.toString());
+        Event event = new Event("meeting", LocalDateTime.parse("2019-10-16T10:00"),
+                LocalDateTime.parse("2019-10-17T12:15"));
+        assertEquals("2019-10-16T10:00", event.getStart());
+        assertEquals("2019-10-17T12:15", event.getEnd());
+        assertEquals(LocalDateTime.parse("2019-10-16T10:00"), event.getStartDate());
+        assertEquals(LocalDateTime.parse("2019-10-17T12:15"), event.getEndDate());
+        assertEquals("[E] [ ] meeting (from: Oct 16 2019 10:00 to: Oct 17 2019 12:15)", event.toString());
     }
 
     @Test
     public void event_formatDates() {
-        Event event = new Event("meeting", LocalDate.parse("2019-10-16"), LocalDate.parse("2019-10-17"));
-        assertEquals("2019-10-16", event.getStart());
-        assertEquals("2019-10-17", event.getEnd());
-        assertEquals(LocalDate.parse("2019-10-16"), event.getStartDate());
-        assertEquals(LocalDate.parse("2019-10-17"), event.getEndDate());
-        assertEquals("[E] [ ] meeting (from: Oct 16 2019 to: Oct 17 2019)", event.toString());
+        Event event = new Event("meeting", LocalDateTime.parse("2019-10-16T08:00"),
+                LocalDateTime.parse("2019-10-17T17:00"));
+        assertEquals("2019-10-16T08:00", event.getStart());
+        assertEquals("2019-10-17T17:00", event.getEnd());
+        assertEquals(LocalDateTime.parse("2019-10-16T08:00"), event.getStartDate());
+        assertEquals(LocalDateTime.parse("2019-10-17T17:00"), event.getEndDate());
+        assertEquals("[E] [ ] meeting (from: Oct 16 2019 08:00 to: Oct 17 2019 17:00)", event.toString());
     }
 
     @Test

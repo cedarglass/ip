@@ -8,7 +8,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -40,9 +40,9 @@ public class StorageTest {
         ToDo todo = new ToDo("read book");
         todo.setDone(true);
         tasks.add(todo);
-        tasks.add(new Deadline("return book", LocalDate.parse("2019-06-06")));
-        Event event = new Event("project meeting", LocalDate.parse("2019-08-06"),
-                LocalDate.parse("2019-08-07"));
+        tasks.add(new Deadline("return book", LocalDateTime.parse("2019-06-06T12:00")));
+        Event event = new Event("project meeting", LocalDateTime.parse("2019-08-06T09:00"),
+                LocalDateTime.parse("2019-08-07T18:00"));
         event.setDone(true);
         tasks.add(event);
 
@@ -58,14 +58,14 @@ public class StorageTest {
         Deadline loadedDeadline = (Deadline) loaded.get(1);
         assertFalse(loadedDeadline.isDone());
         assertEquals("return book", loadedDeadline.getName());
-        assertEquals("2019-06-06", loadedDeadline.getDeadline());
+        assertEquals("2019-06-06T12:00", loadedDeadline.getDeadline());
 
         assertInstanceOf(Event.class, loaded.get(2));
         Event loadedEvent = (Event) loaded.get(2);
         assertTrue(loadedEvent.isDone());
         assertEquals("project meeting", loadedEvent.getName());
-        assertEquals("2019-08-06", loadedEvent.getStart());
-        assertEquals("2019-08-07", loadedEvent.getEnd());
+        assertEquals("2019-08-06T09:00", loadedEvent.getStart());
+        assertEquals("2019-08-07T18:00", loadedEvent.getEnd());
     }
 
     @Test
@@ -74,8 +74,8 @@ public class StorageTest {
         Files.createDirectories(filePath.getParent());
         List<String> lines = List.of(
                 "T | 1 | read book",
-                "D | 0 | return book | 2019-06-06",
-                "E | 0 | project meeting | 2019-08-06 | 2019-08-07",
+                "D | 0 | return book | 2019-06-06T12:00",
+                "E | 0 | project meeting | 2019-08-06T09:00 | 2019-08-07T18:00",
                 "X | 1 | unknown type",
                 "D | 0 | missing deadline",
                 "E | 1 | missing end | 2019-08-06"
