@@ -9,15 +9,14 @@ import java.util.List;
 import callie.command.AddDeadlineCommand;
 import callie.command.AddEventCommand;
 import callie.command.AddTodoCommand;
-import callie.command.ByeCommand;
-import callie.command.ClearCommand;
-import callie.command.Command;
 import callie.command.BulkDeleteCommand;
 import callie.command.BulkMarkCommand;
 import callie.command.BulkUnmarkCommand;
+import callie.command.ByeCommand;
+import callie.command.ClearCommand;
+import callie.command.Command;
 import callie.command.FindCommand;
 import callie.command.ListCommand;
-
 
 /**
  * Parses user input into command objects.
@@ -63,6 +62,11 @@ public class Parser {
             String[] eventParts = parseEvent(rest);
             LocalDateTime start = parseDateTime(eventParts[1]);
             LocalDateTime end = parseDateTime(eventParts[2]);
+            if (!end.isAfter(start)) {
+                throw new IllegalArgumentException(
+                        " Please ensure your start time comes before your end time chronologically!"
+                );
+            }
             return new AddEventCommand(eventParts[0], start, end);
         }
         case "find":
@@ -119,12 +123,13 @@ public class Parser {
     private static List<Integer> parseRange(String token) {
         String[] bounds = token.split("-");
         if (bounds.length != 2) {
-            throw new IllegalArgumentException("wait, your task doesn't exist!");
+            throw new IllegalArgumentException(" Please make sure your bounds specify one start and one end index!");
         }
         int start = parseSingleIndex(bounds[0].trim());
         int end = parseSingleIndex(bounds[1].trim());
         if (start > end) {
-            throw new IllegalArgumentException("wait, your task doesn't exist!");
+            throw new IllegalArgumentException(
+                "When you're using ranges, please ensure your start task is smaller than your end task!");
         }
         List<Integer> indices = new ArrayList<>();
         for (int i = start; i <= end; i++) {
@@ -154,15 +159,24 @@ public class Parser {
      * @return An array of [name, dateText].
      */
     private static String[] parseDeadline(String rest) {
-        if (!rest.contains("by")) {
+        java.util.regex.Matcher m = java.util.regex.Pattern
+                .compile("\\bby\\b")
+                .matcher(rest);
+
+        if (!m.find()) {
             throw new IllegalArgumentException(" Please specify your task with the word 'by'.");
         }
-        String[] parts = rest.split(" by ");
-        if (parts.length < 2) {
-            throw new IllegalArgumentException(" Please specify your event name!");
+
+        String name = rest.substring(0, m.start()).trim();
+        String dateText = rest.substring(m.end()).trim();
+
+        if (name.isEmpty()) {
+            throw new IllegalArgumentException(" Please specify your deadline name!");
         }
-        String name = parts[0].trim();
-        String dateText = parts[1].trim();
+        if (dateText.isEmpty()) {
+            throw new IllegalArgumentException(" Please specify your deadline date!");
+        }
+
         return new String[] { name, dateText };
     }
 
@@ -173,17 +187,42 @@ public class Parser {
      * @return An array of [name, startDateText, endDateText].
      */
     private static String[] parseEvent(String rest) {
-        if (!rest.contains("from") || !rest.contains("to")) {
-            throw new IllegalArgumentException(" Please specify your task with the word 'from' and 'to'.");
+        java.util.regex.Matcher fromMatcher =
+                java.util.regex.Pattern.compile("\\bfrom\\b").matcher(rest);
+        java.util.regex.Matcher toMatcher =
+                java.util.regex.Pattern.compile("\\bto\\b").matcher(rest);
+
+        if (!fromMatcher.find() || !toMatcher.find()) {
+            throw new IllegalArgumentException(
+                    " Please specify your task with the word 'from' and 'to'.");
         }
-        String[] parts = rest.split(" from ");
-        if (parts.length < 2) {
+
+        int fromStart = fromMatcher.start();
+        int fromEnd = fromMatcher.end();
+        int toStart = toMatcher.start();
+        int toEnd = toMatcher.end();
+
+        // Ensure "from" appears before "to"
+        if (fromEnd > toStart) {
+            throw new IllegalArgumentException(
+                    " Please ensure your event goes 'from' a time 'to' another time!");
+        }
+
+        String name = rest.substring(0, fromStart).trim();
+        String startTime = rest.substring(fromEnd, toStart).trim();
+        String endTime = rest.substring(toEnd).trim();
+
+        if (name.isEmpty()) {
             throw new IllegalArgumentException(" Please specify your event name!");
         }
-        String[] dates = parts[1].split(" to ");
-        String name = parts[0].trim();
-        return new String[] { name, dates[0].trim(), dates[1].trim() };
+        if (startTime.isEmpty() || endTime.isEmpty()) {
+            throw new IllegalArgumentException(
+                    " Please specify your start and end times!");
+        }
+
+        return new String[] { name, startTime, endTime };
     }
+
 
     /**
      * Parses a date or date-time into a LocalDateTime.
