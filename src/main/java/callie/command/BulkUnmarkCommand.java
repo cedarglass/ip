@@ -32,13 +32,13 @@ public class BulkUnmarkCommand extends Command {
     @Override
     public void execute(TaskList tasks, Ui ui, Storage storage) {
         validateIndices(tasks);
+        ui.showMessage(" Let's unmark your tasks.");
         for (int taskNumber : taskNumbers) {
             Task task = tasks.getTask(taskNumber - 1);
             if (!task.isDone()) {
                 ui.showMessage(String.format(" Task %d is already unmarked.", taskNumber));
             } else {
                 task.reset();
-                ui.showMessage(" I've unmarked this task.");
                 ui.showMessage(taskNumber + ". " + task);
             }
         }

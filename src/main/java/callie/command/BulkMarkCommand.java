@@ -32,13 +32,13 @@ public class BulkMarkCommand extends Command {
     @Override
     public void execute(TaskList tasks, Ui ui, Storage storage) {
         validateIndices(tasks);
+        ui.showMessage(" Let's mark your tasks.");
         for (int taskNumber : taskNumbers) {
             Task task = tasks.getTask(taskNumber - 1);
             if (task.isDone()) {
                 ui.showMessage(String.format(" Task %d is already done.", taskNumber));
             } else {
                 task.done();
-                ui.showMessage(" I've marked this task as done.");
                 ui.showMessage(taskNumber + ". " + task);
             }
         }
