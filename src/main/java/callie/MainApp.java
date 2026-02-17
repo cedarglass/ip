@@ -1,16 +1,17 @@
 package callie;
 
+import java.io.IOException;
+
 import callie.logic.Logic;
 import callie.storage.Storage;
 import callie.ui.MainWindow;
-
-import java.io.IOException;
-
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+
+
 
 /**
  * JavaFX application entry point.
