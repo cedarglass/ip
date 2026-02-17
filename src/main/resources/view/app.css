@@ -1,0 +1,71 @@
+.main-root {
+    -fx-background-color: #f8f2e8;
+    -fx-font-family: "Inter";
+    -fx-font-weight: 400;
+}
+
+@font-face {
+    font-family: "Inter";
+    src: url("/fonts/Inter_18pt-Regular.ttf");
+}
+
+.main-scroll {
+    -fx-background-color: #f8f2e8;
+    -fx-background: #f8f2e8;
+    -fx-border-color: transparent;
+}
+
+.main-scroll > .viewport {
+    -fx-background-color: #f8f2e8;
+}
+
+.dialog-container {
+    -fx-padding: 32 16 16 16;
+}
+
+.dialog-box {
+    -fx-background-color: #e0e4dc;
+    -fx-background-radius: 12;
+    -fx-padding: 24 24 24 24;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.08), 10, 0.2, 0, 2);
+}
+
+.user-dialog {
+    -fx-background-color: #b49d61;
+}
+
+.bot-dialog {
+    -fx-background-color: #deceb2;
+}
+
+.list-dialog {
+    -fx-background-color: #ffffff;
+    -fx-border-color: #e0e4dc;
+    -fx-border-radius: 12;
+    -fx-border-width: 1;
+}
+
+.dialog-label {
+    -fx-text-fill: #1b1b1b;
+    -fx-font-size: 13px;
+}
+
+.input-bar {
+    -fx-background-color: #e0e4dc;
+    -fx-padding: 8 12 8 12;
+}
+
+.input-field {
+    -fx-background-color: #f8f2e8;
+    -fx-background-radius: 8;
+    -fx-border-color: #b49d61;
+    -fx-border-radius: 8;
+    -fx-padding: 8 10 8 10;
+}
+
+.send-button {
+    -fx-background-color: #bb2b35;
+    -fx-text-fill: #f8f2e8;
+    -fx-background-radius: 8;
+    -fx-padding: 8 16 8 16;
+}

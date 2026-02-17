@@ -7,20 +7,21 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<AnchorPane xmlns:fx="http://javafx.com/fxml" fx:controller="callie.ui.MainWindow">
+<AnchorPane xmlns:fx="http://javafx.com/fxml" fx:controller="callie.ui.MainWindow" styleClass="main-root">
     <children>
         <ScrollPane fx:id="scrollPane" fitToWidth="true" hbarPolicy="NEVER" vbarPolicy="ALWAYS"
                     prefHeight="480.0" prefWidth="640.0" AnchorPane.topAnchor="0.0"
-                    AnchorPane.bottomAnchor="40.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
+                    AnchorPane.bottomAnchor="40.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
+                    styleClass="main-scroll">
             <content>
-                <VBox fx:id="dialogContainer" spacing="8.0" prefWidth="620.0" />
+                <VBox fx:id="dialogContainer" spacing="16.0" prefWidth="620.0" styleClass="dialog-container" />
             </content>
         </ScrollPane>
-        <HBox spacing="8.0" prefHeight="40.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
-              AnchorPane.bottomAnchor="0.0">
+        <HBox spacing="8.0" prefHeight="52.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
+              AnchorPane.bottomAnchor="0.0" styleClass="input-bar">
             <children>
-                <TextField fx:id="userInput" HBox.hgrow="ALWAYS" onAction="#handleUserInput" />
-                <Button fx:id="sendButton" text="Send" onAction="#handleUserInput" />
+                <TextField fx:id="userInput" HBox.hgrow="ALWAYS" styleClass="input-field" />
+                <Button fx:id="sendButton" text="Send" styleClass="send-button" />
             </children>
         </HBox>
     </children>
