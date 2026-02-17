@@ -90,4 +90,21 @@ public class StorageTest {
         assertInstanceOf(Deadline.class, loaded.get(1));
         assertInstanceOf(Event.class, loaded.get(2));
     }
+
+    @Test
+    public void load_dateOnlyDeadline_parsesAsStartOfDay() throws IOException {
+        Path filePath = tempDir.resolve("data/callie.txt");
+        Files.createDirectories(filePath.getParent());
+        List<String> lines = List.of(
+                "D | 0 | return book | 2019-10-15"
+        );
+        Files.write(filePath, lines);
+
+        Storage storage = new Storage(filePath.toString());
+        ArrayList<Task> loaded = storage.loadTasks();
+
+        assertEquals(1, loaded.size());
+        Deadline deadline = (Deadline) loaded.get(0);
+        assertEquals("2019-10-15T00:00", deadline.getDeadline());
+    }
 }

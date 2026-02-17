@@ -2,6 +2,7 @@ package callie.command;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.ByteArrayInputStream;
@@ -68,6 +69,58 @@ public class CommandTest {
     }
 
     @Test
+    public void bulkDelete_withDuplicates_removesOnce() throws Exception {
+        Storage storage = new Storage(tempDir.resolve("data/callie.txt").toString());
+        TaskList tasks = new TaskList(new ArrayList<>());
+        tasks.addTask(new ToDo("a"));
+        tasks.addTask(new ToDo("b"));
+        tasks.addTask(new ToDo("c"));
+        RecordingUi ui = new RecordingUi();
+
+        new BulkDeleteCommand(List.of(2, 2, 2)).execute(tasks, ui, storage);
+
+        assertEquals(2, tasks.getSize());
+        assertEquals("a", tasks.getTask(0).getName());
+        assertEquals("c", tasks.getTask(1).getName());
+    }
+
+    @Test
+    public void bulkMark_invalidIndex_throws() throws Exception {
+        Storage storage = new Storage(tempDir.resolve("data/callie.txt").toString());
+        TaskList tasks = new TaskList(new ArrayList<>());
+        tasks.addTask(new ToDo("a"));
+        RecordingUi ui = new RecordingUi();
+
+        IllegalArgumentException error = assertThrows(IllegalArgumentException.class, () ->
+                new BulkMarkCommand(List.of(2)).execute(tasks, ui, storage));
+        assertEquals("wait, your task doesn't exist!", error.getMessage());
+    }
+
+    @Test
+    public void bulkDelete_invalidIndex_throws() throws Exception {
+        Storage storage = new Storage(tempDir.resolve("data/callie.txt").toString());
+        TaskList tasks = new TaskList(new ArrayList<>());
+        tasks.addTask(new ToDo("a"));
+        RecordingUi ui = new RecordingUi();
+
+        IllegalArgumentException error = assertThrows(IllegalArgumentException.class, () ->
+                new BulkDeleteCommand(List.of(0)).execute(tasks, ui, storage));
+        assertEquals("wait, your task doesn't exist!", error.getMessage());
+    }
+
+    @Test
+    public void bulkUnmark_invalidIndex_throws() throws Exception {
+        Storage storage = new Storage(tempDir.resolve("data/callie.txt").toString());
+        TaskList tasks = new TaskList(new ArrayList<>());
+        tasks.addTask(new ToDo("a"));
+        RecordingUi ui = new RecordingUi();
+
+        IllegalArgumentException error = assertThrows(IllegalArgumentException.class, () ->
+                new BulkUnmarkCommand(List.of(2)).execute(tasks, ui, storage));
+        assertEquals("wait, your task doesn't exist!", error.getMessage());
+    }
+
+    @Test
     public void byeCommand_isExitTrue() {
         Command cmd = new ByeCommand();
         assertTrue(cmd.isExit());
@@ -78,7 +131,8 @@ public class CommandTest {
         TaskList tasks = new TaskList(new ArrayList<>());
         tasks.addTask(new ToDo("a"));
         RecordingUi ui = new RecordingUi();
-        new ListCommand().execute(tasks, ui, new Storage(tempDir.resolve("data/callie.txt").toString()));
+        new ListCommand().execute(tasks, ui,
+                new Storage(tempDir.resolve("data/callie.txt").toString()));
         assertEquals(1, ui.listShownCount);
     }
 
@@ -96,7 +150,8 @@ public class CommandTest {
         tasks.addTask(new ToDo("wash clothes"));
         RecordingUi ui = new RecordingUi();
 
-        new FindCommand("book").execute(tasks, ui, new Storage(tempDir.resolve("data/callie.txt").toString()));
+        new FindCommand("book").execute(tasks, ui,
+                new Storage(tempDir.resolve("data/callie.txt").toString()));
 
         assertEquals(1, ui.filteredListShownCount);
         assertEquals(2, ui.lastFilteredSize);
@@ -107,7 +162,8 @@ public class CommandTest {
         TaskList tasks = new TaskList(new ArrayList<>());
         RecordingUi ui = new RecordingUi();
 
-        new FindCommand("book").execute(tasks, ui, new Storage(tempDir.resolve("data/callie.txt").toString()));
+        new FindCommand("book").execute(tasks, ui,
+                new Storage(tempDir.resolve("data/callie.txt").toString()));
         assertTrue(ui.messages.get(0).contains("I couldn't find any matches for 'book'!"));
         assertTrue(ui.messages.get(1).contains(" Are you sure you got that right?"));
     }

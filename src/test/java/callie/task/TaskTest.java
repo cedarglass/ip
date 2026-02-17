@@ -60,4 +60,19 @@ public class TaskTest {
         assertFalse(todo.isDone());
         assertEquals("wash clothes", todo.getName());
     }
+
+    @Test
+    public void deadline_done_updatesToString() {
+        Deadline deadline = new Deadline("return book", LocalDateTime.parse("2019-10-15T09:30"));
+        deadline.done();
+        assertEquals("[D] [X] return book (by: Oct 15 2019 09:30)", deadline.toString());
+    }
+
+    @Test
+    public void event_done_updatesToString() {
+        Event event = new Event("meeting", LocalDateTime.parse("2019-10-16T08:00"),
+                LocalDateTime.parse("2019-10-17T17:00"));
+        event.done();
+        assertEquals("[E] [X] meeting (from: Oct 16 2019 08:00 to: Oct 17 2019 17:00)", event.toString());
+    }
 }
