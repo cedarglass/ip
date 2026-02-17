@@ -2,6 +2,7 @@ package callie.ui;
 
 import callie.logic.Logic;
 
+import javafx.animation.PauseTransition;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
@@ -10,6 +11,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 
 /**
  * Controller for the main GUI window.
@@ -71,9 +73,20 @@ public class MainWindow {
         if (logic.isExitCommand()) {
             userInput.setDisable(true);
             sendButton.setDisable(true);
+            pauseThenClose();
+        }
+    }
+
+    /**
+     * Allows Callie's farewell message to be seen before the GUI is shut down.
+     */
+    private void pauseThenClose() {
+        PauseTransition pause = new PauseTransition(Duration.seconds(1));
+        pause.setOnFinished(event -> {
             Stage stage = (Stage) dialogContainer.getScene().getWindow();
             stage.close();
-        }
+        });
+        pause.play();
     }
 
     private boolean isListResponse(String response) {
