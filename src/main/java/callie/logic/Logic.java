@@ -4,6 +4,7 @@ import callie.command.Command;
 import callie.parser.Parser;
 import callie.storage.Storage;
 import callie.task.TaskList;
+import callie.ui.GuiUi;
 
 /**
  * Handles the application's core logic and command execution.

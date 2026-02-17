@@ -1,4 +1,4 @@
-package callie.logic;
+package callie.ui;
 
 import java.io.ByteArrayInputStream;
 import java.util.ArrayList;
@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.Scanner;
 
 import callie.task.TaskList;
-import callie.ui.Ui;
 
 /**
  * Collects UI messages for GUI rendering.
@@ -68,10 +67,5 @@ public class GuiUi extends Ui {
             int index = i + 1;
             messages.add(index + ". " + filteredTasks.getTask(i));
         }
-    }
-
-    @Override
-    public void showGoodbye() {
-        messages.add(" Bye. Hope to see you again soon!");
     }
 }
