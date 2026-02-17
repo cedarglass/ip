@@ -19,7 +19,7 @@ Use it to track todos, deadlines, and events, then search, mark, or delete tasks
 
 ## Features
 
-:information_source: **Notes about the command format**:
+ℹ️ **Notes about the command format**:
 
 - Words in UPPER_CASE are the parameters to be supplied by the user.
   e.g. in `todo TASK_NAME`, `TASK_NAME` is a parameter which can be used as `todo read book`.
