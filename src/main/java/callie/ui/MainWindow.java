@@ -3,6 +3,7 @@ package callie.ui;
 import callie.logic.Logic;
 
 import javafx.fxml.FXML;
+import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
@@ -34,6 +35,9 @@ public class MainWindow {
     @FXML
     public void initialize() {
         scrollPane.vvalueProperty().bind(dialogContainer.heightProperty());
+        sendButton.setDefaultButton(true);
+        sendButton.setOnAction(event -> handleUserInput());
+        userInput.setOnAction(event -> handleUserInput());
     }
 
     /**
@@ -56,14 +60,24 @@ public class MainWindow {
             return;
         }
         String response = logic.getResponse(input);
+        DialogBox botDialog = isListResponse(response)
+                ? DialogBox.getListDialog(response, botImage)
+                : DialogBox.getBotDialog(response, botImage);
         dialogContainer.getChildren().addAll(
                 DialogBox.getUserDialog(input, userImage),
-                DialogBox.getBotDialog(response, botImage)
+                botDialog
         );
         userInput.clear();
         if (logic.isExitCommand()) {
+            userInput.setDisable(true);
+            sendButton.setDisable(true);
             Stage stage = (Stage) dialogContainer.getScene().getWindow();
             stage.close();
         }
+    }
+
+    private boolean isListResponse(String response) {
+        return response.startsWith(" Here are your current tasks in a list:")
+                || response.startsWith(" Here are the matching tasks in your list:");
     }
 }

@@ -4,13 +4,13 @@ import callie.logic.Logic;
 import callie.storage.Storage;
 import callie.ui.MainWindow;
 
+import java.io.IOException;
+
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-
-import java.io.IOException;
 
 /**
  * JavaFX application entry point.
@@ -26,6 +26,7 @@ public class MainApp extends Application {
             controller.setLogic(new Logic(new Storage("./data/callie.txt")));
 
             Scene scene = new Scene(root);
+            scene.getStylesheets().add(getClass().getResource("/view/app.css").toExternalForm());
             stage.setTitle("Callie");
             stage.setScene(scene);
             stage.show();
