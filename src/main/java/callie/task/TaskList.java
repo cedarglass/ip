@@ -43,6 +43,9 @@ public class TaskList {
      * @param task The task to add.
      */
     public void addTask(Task task) {
+        if (isDuplicate(task)) {
+            throw new IllegalArgumentException(" wait... this task already exists!");
+        }
         tasks.add(task);
     }
 
@@ -71,6 +74,36 @@ public class TaskList {
      */
     public ArrayList<Task> getTasks() {
         return tasks;
+    }
+
+    private boolean isDuplicate(Task task) {
+        for (Task existing : tasks) {
+            if (isSameTask(existing, task)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private boolean isSameTask(Task left, Task right) {
+        if (!left.getClass().equals(right.getClass())) {
+            return false;
+        }
+        if (!left.getName().equals(right.getName())) {
+            return false;
+        }
+        if (left instanceof Deadline) {
+            Deadline leftDeadline = (Deadline) left;
+            Deadline rightDeadline = (Deadline) right;
+            return leftDeadline.getDeadline().equals(rightDeadline.getDeadline());
+        }
+        if (left instanceof Event) {
+            Event leftEvent = (Event) left;
+            Event rightEvent = (Event) right;
+            return leftEvent.getStart().equals(rightEvent.getStart())
+                    && leftEvent.getEnd().equals(rightEvent.getEnd());
+        }
+        return true;
     }
 
     /**
