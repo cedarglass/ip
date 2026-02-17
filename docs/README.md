@@ -3,6 +3,20 @@
 Callie is a friendly task-tracking chatbot with a simple command format and a clean GUI.
 Use it to track todos, deadlines, and events, then search, mark, or delete tasks quickly.
 
+## Contents
+
+- [Features](#features)
+  - [Add a todo](#add-a-todo)
+  - [Add a deadline](#add-a-deadline)
+  - [Add an event](#add-an-event)
+  - [List tasks](#list-tasks)
+  - [Mark tasks as done (bulk)](#mark-tasks-as-done-bulk)
+  - [Unmark tasks (bulk)](#unmark-tasks-bulk)
+  - [Delete tasks (bulk)](#delete-tasks-bulk)
+  - [Clear all tasks](#clear-all-tasks)
+  - [Find tasks](#find-tasks)
+  - [Exit](#exit)
+
 ## Features
 
 :information_source: **Notes about the command format**:
