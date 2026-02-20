@@ -1,5 +1,7 @@
 # Callie User Guide
 
+<img src="Ui.png" alt="isolated" width="500"/>
+
 Welcome to Callie — a friendly, lightweight task tracker with a clean GUI.
 Add todos, deadlines, and events, then find, mark, or delete tasks in seconds.
 
